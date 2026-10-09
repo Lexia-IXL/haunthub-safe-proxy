@@ -1,0 +1,19 @@
+{
+  "name": "haunthub-safe-proxy",
+  "version": "1.0.0",
+  "private": true,
+  "description": "An allowlist-based, read-only web reader for permitted HTTPS sites.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "cheerio": "^1.0.0",
+    "express": "^4.21.2",
+    "express-rate-limit": "^7.5.0",
+    "helmet": "^8.0.0"
+  }
+}

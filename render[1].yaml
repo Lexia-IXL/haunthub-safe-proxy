@@ -1,0 +1,14 @@
+services:
+  - type: web
+    name: haunthub-safe-proxy
+    runtime: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_VERSION
+        value: 20
+      - key: ALLOWED_HOSTS
+        value: example.com,example.org
+      - key: MAX_RESPONSE_BYTES
+        value: 1500000
