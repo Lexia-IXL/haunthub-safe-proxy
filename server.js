@@ -117,9 +117,7 @@ throw new Error("Only HTTPS websites are allowed.");
 }
 
 if (target.username || target.password) {
-throw new Error(
-"URLs containing usernames or passwords are not allowed."
-);
+throw new Error("URLs containing usernames or passwords are not allowed.");
 }
 
 if (target.port && target.port !== "443") {
@@ -129,14 +127,11 @@ throw new Error("Only standard HTTPS port 443 is allowed.");
 const hostname = target.hostname.toLowerCase().replace(/.$/, "");
 
 if (!hostname || hostname === "localhost" || net.isIP(hostname)) {
-throw new Error(
-"IP-address and localhost targets are not allowed."
-);
+throw new Error("IP-address and localhost targets are not allowed.");
 }
 
 const permitted = allowedHosts().some(
-(domain) =>
-hostname === domain || hostname.endsWith("." + domain)
+(domain) => hostname === domain || hostname.endsWith("." + domain)
 );
 
 if (!permitted) {
@@ -205,7 +200,7 @@ return Buffer.concat(chunks);
 }
 
 app.get("/api/read", async (req, res) => {
-let controller;
+let timeout;
 
 try {
 const rawUrl = String(req.query.url || "");
@@ -218,12 +213,9 @@ if (!rawUrl || rawUrl.length > 2048) {
 }
 
 const target = await validateTarget(rawUrl);
+const controller = new AbortController();
 
-controller = new AbortController();
-
-const timeout = setTimeout(() => {
-  controller.abort();
-}, 10_000);
+timeout = setTimeout(() => controller.abort(), 10_000);
 
 let upstream;
 
@@ -233,19 +225,19 @@ try {
     redirect: "manual",
     signal: controller.signal,
     headers: {
-      "User-Agent":
-        "HauntHubSafeReader/1.0 (+read-only; allowlisted destinations)",
+      "User-Agent": "HauntHubSafeReader/1.0",
       Accept: "text/html,application/xhtml+xml;q=0.9"
     }
   });
 } finally {
   clearTimeout(timeout);
+  timeout = undefined;
 }
 
 if ([301, 302, 303, 307, 308].includes(upstream.status)) {
   return res.status(400).json({
     error:
-      "This page redirects. Submit the destination URL directly only if its domain is permitted."
+      "This page redirects. Submit its destination URL directly if its domain is permitted."
   });
 }
 
@@ -264,8 +256,7 @@ if (
   !contentType.includes("application/xhtml+xml")
 ) {
   return res.status(415).json({
-    error:
-      "For safety, this reader only displays HTML pages, not downloads or other file types."
+    error: "Only HTML pages can be displayed."
   });
 }
 
@@ -279,21 +270,14 @@ if (declaredLength > MAX_RESPONSE_BYTES) {
   });
 }
 
-const bytes = await readLimitedBody(
-  upstream,
-  MAX_RESPONSE_BYTES
-);
+const bytes = await readLimitedBody(upstream, MAX_RESPONSE_BYTES);
+const $ = cheerio.load(bytes.toString("utf8"));
 
-const html = bytes.toString("utf8");
-const $ = cheerio.load(html);
-
-const title =
-  $("title").first().text().trim() || target.hostname;
-
+const title = $("title").first().text().trim() || target.hostname;
 const description =
   $('meta[name="description"]').attr("content") || "";
 
-// Remove scripts, forms, frames, stylesheets, and active content.
+// Remove scripts, forms, frames, and active content from fetched pages.
 $(
   "script,style,noscript,iframe,frame,frameset,object,embed," +
     "form,button,input,textarea,select,option,svg,canvas," +
@@ -308,18 +292,12 @@ $(
 
 $("img").each((_, el) => {
   const alt = $(el).attr("alt");
-  $(el).replaceWith(
-    alt ? `[Image: ${alt}]` : "[Image]"
-  );
+  $(el).replaceWith(alt ? `[Image: ${alt}]` : "[Image]");
 });
 
 $("a").each((_, el) => {
-  const label =
-    $(el).text().trim() || $(el).attr("href") || "link";
-
-  $(el).replaceWith(
-    `${label} (link not opened by this reader)`
-  );
+  const label = $(el).text().trim() || "link";
+  $(el).replaceWith(`${label} (link not opened by this reader)`);
 });
 
 const bodyHtml = $("body").length
@@ -346,6 +324,8 @@ error.name === "AbortError"
 return res.status(400).json({ error: message });
 ```
 
+} finally {
+if (timeout) clearTimeout(timeout);
 }
 });
 
