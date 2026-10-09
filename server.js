@@ -7,10 +7,9 @@ const net = require("node:net");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-
 const MAX_RESPONSE_BYTES = Math.max(
-100_000,
-Math.min(Number(process.env.MAX_RESPONSE_BYTES) || 1_500_000, 3_000_000)
+100000,
+Math.min(Number(process.env.MAX_RESPONSE_BYTES) || 1500000, 3000000)
 );
 
 app.disable("x-powered-by");
@@ -41,7 +40,7 @@ app.use(express.static("public", { extensions: ["html"] }));
 app.use(
 "/api",
 rateLimit({
-windowMs: 60_000,
+windowMs: 60000,
 limit: 20,
 standardHeaders: "draft-7",
 legacyHeaders: false,
@@ -107,9 +106,7 @@ let target;
 try {
 target = new URL(rawUrl);
 } catch {
-throw new Error(
-"Enter a complete URL, such as https://example.com/page"
-);
+throw new Error("Enter a complete URL beginning with https://");
 }
 
 if (target.protocol !== "https:") {
@@ -117,7 +114,7 @@ throw new Error("Only HTTPS websites are allowed.");
 }
 
 if (target.username || target.password) {
-throw new Error("URLs containing usernames or passwords are not allowed.");
+throw new Error("URLs with usernames or passwords are not allowed.");
 }
 
 if (target.port && target.port !== "443") {
@@ -135,9 +132,7 @@ const permitted = allowedHosts().some(
 );
 
 if (!permitted) {
-throw new Error(
-"That domain is not on this reader's permitted-site list."
-);
+throw new Error("That domain is not on the permitted-site list.");
 }
 
 let records;
@@ -152,12 +147,10 @@ throw new Error("The website hostname could not be resolved.");
 }
 
 if (
-!records.length ||
+records.length === 0 ||
 records.some((record) => !isPublicIp(record.address))
 ) {
-throw new Error(
-"This hostname does not resolve exclusively to public IP addresses."
-);
+throw new Error("The hostname must resolve only to public IP addresses.");
 }
 
 return target;
@@ -172,36 +165,30 @@ const reader = response.body.getReader();
 const chunks = [];
 let total = 0;
 
-try {
 while (true) {
-const { done, value } = await reader.read();
+const result = await reader.read();
 
 ```
-  if (done) break;
-
-  total += value.byteLength;
-
-  if (total > maxBytes) {
-    await reader.cancel();
-    throw new Error(
-      "The page is too large to display. Try a smaller page."
-    );
-  }
-
-  chunks.push(Buffer.from(value));
+if (result.done) {
+  break;
 }
+
+total += result.value.byteLength;
+
+if (total > maxBytes) {
+  await reader.cancel();
+  throw new Error("The page is too large to display.");
+}
+
+chunks.push(Buffer.from(result.value));
 ```
 
-} finally {
-reader.releaseLock();
 }
 
 return Buffer.concat(chunks);
 }
 
 app.get("/api/read", async (req, res) => {
-let timeout;
-
 try {
 const rawUrl = String(req.query.url || "");
 
@@ -215,8 +202,7 @@ if (!rawUrl || rawUrl.length > 2048) {
 const target = await validateTarget(rawUrl);
 const controller = new AbortController();
 
-timeout = setTimeout(() => controller.abort(), 10_000);
-
+const timer = setTimeout(() => controller.abort(), 10000);
 let upstream;
 
 try {
@@ -229,21 +215,25 @@ try {
       Accept: "text/html,application/xhtml+xml;q=0.9"
     }
   });
+} catch (error) {
+  if (error.name === "AbortError") {
+    throw new Error("The destination took too long to respond.");
+  }
+
+  throw error;
 } finally {
-  clearTimeout(timeout);
-  timeout = undefined;
+  clearTimeout(timer);
 }
 
 if ([301, 302, 303, 307, 308].includes(upstream.status)) {
   return res.status(400).json({
-    error:
-      "This page redirects. Submit its destination URL directly if its domain is permitted."
+    error: "This page redirects. Enter its permitted destination URL directly."
   });
 }
 
 if (!upstream.ok) {
   return res.status(502).json({
-    error: `The destination returned HTTP ${upstream.status}.`
+    error: "The destination returned HTTP " + upstream.status + "."
   });
 }
 
@@ -277,7 +267,6 @@ const title = $("title").first().text().trim() || target.hostname;
 const description =
   $('meta[name="description"]').attr("content") || "";
 
-// Remove scripts, forms, frames, and active content from fetched pages.
 $(
   "script,style,noscript,iframe,frame,frameset,object,embed," +
     "form,button,input,textarea,select,option,svg,canvas," +
@@ -292,12 +281,12 @@ $(
 
 $("img").each((_, el) => {
   const alt = $(el).attr("alt");
-  $(el).replaceWith(alt ? `[Image: ${alt}]` : "[Image]");
+  $(el).replaceWith(alt ? "[Image: " + alt + "]" : "[Image]");
 });
 
 $("a").each((_, el) => {
   const label = $(el).text().trim() || "link";
-  $(el).replaceWith(`${label} (link not opened by this reader)`);
+  $(el).replaceWith(label + " (link not opened by this reader)");
 });
 
 const bodyHtml = $("body").length
@@ -310,7 +299,7 @@ return res.json({
   title: title.slice(0, 250),
   description: description.slice(0, 500),
   source: target.href,
-  textHtml: (bodyHtml || "").slice(0, 800_000)
+  textHtml: (bodyHtml || "").slice(0, 800000)
 });
 ```
 
@@ -324,8 +313,6 @@ error.name === "AbortError"
 return res.status(400).json({ error: message });
 ```
 
-} finally {
-if (timeout) clearTimeout(timeout);
 }
 });
 
@@ -334,5 +321,5 @@ res.json({ ok: true });
 });
 
 app.listen(PORT, "0.0.0.0", () => {
-console.log(`HauntHub Safe Reader listening on port ${PORT}`);
+console.log("HauntHub Safe Reader listening on port " + PORT);
 });
