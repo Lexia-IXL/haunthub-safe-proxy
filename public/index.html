@@ -7,27 +7,19 @@
 <meta name="theme-color" content="#080808">
 <title>HauntHub 🎃 | Enter If You Dare</title>
 <style>
-:root {
-  --bg:#080808;
-  --panel:#121212;
-  --panel2:#191512;
-  --orange:#ff7918;
-  --bright:#ff9d32;
-  --muted:#a6a09b;
-  --border:#392012;
-}
+:root{--bg:#080808;--panel:#121212;--panel2:#191512;--orange:#ff7918;--bright:#ff9d32;--muted:#a6a09b;--border:#392012}
 *{box-sizing:border-box}
 html,body{margin:0;min-height:100%;background:var(--bg);color:#fff;font-family:Arial,Helvetica,sans-serif}
 body{overflow-x:hidden}
 button,input,textarea,select{font:inherit}
 button{cursor:pointer}
-button:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px solid var(--bright);outline-offset:3px}
+button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{outline:2px solid var(--bright);outline-offset:3px}
 #effects{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
 .ember{position:absolute;bottom:-20px;width:4px;height:4px;border-radius:50%;background:var(--orange);box-shadow:0 0 12px var(--orange);animation:rise linear infinite;opacity:0}
-@keyframes rise{0%{transform:translateY(0) translateX(0);opacity:0}15%{opacity:.8}85%{opacity:.5}100%{transform:translateY(-110vh) translateX(65px);opacity:0}}
+@keyframes rise{0%{transform:translateY(0);opacity:0}15%{opacity:.8}85%{opacity:.5}100%{transform:translateY(-110vh) translateX(65px);opacity:0}}
 body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;background:radial-gradient(ellipse at 50% 40%,#38170435,transparent 60%),radial-gradient(ellipse at 0% 100%,#ff6b1010,transparent 45%)}
 #app{position:relative;z-index:1;min-height:100vh}
-header{height:76px;display:flex;align-items:center;gap:18px;padding:0 5%;border-bottom:1px solid #ffffff10;background:#080808e8;backdrop-filter:blur(14px);position:sticky;top:0;z-index:20}
+header{min-height:76px;display:flex;align-items:center;gap:18px;padding:10px 5%;border-bottom:1px solid #ffffff10;background:#080808e8;backdrop-filter:blur(14px);position:sticky;top:0;z-index:20}
 .brand{display:flex;align-items:center;gap:10px;color:white;font-weight:900;font-size:24px;letter-spacing:-1px;white-space:nowrap}
 .pumpkin{width:45px;height:45px;display:grid;place-items:center;background:#ff79181a;border:1px solid #ff79184c;border-radius:14px;font-size:27px;transition:.25s;box-shadow:0 0 20px #ff791810}
 .pumpkin:hover{transform:rotate(-12deg) scale(1.08);box-shadow:0 0 25px #ff791855}
@@ -88,6 +80,7 @@ h1 span{color:var(--orange);text-shadow:0 0 35px #ff79182c}
 .card-actions button{padding:10px 8px;font-size:12px;flex:1}
 .card-actions .play{background:var(--orange);border:0;color:#1a0c02;border-radius:8px;font-weight:900}
 .card-actions .remove{flex:0 0 auto;background:#ffffff0b;border:1px solid #ffffff14;color:#d2c5bd;border-radius:8px}
+.card-actions .unavailable{background:#24201d;color:#d6b9a1;border:1px solid #60432f;border-radius:8px;font-weight:800}
 .empty{border:1px dashed #ffffff24;border-radius:16px;padding:60px 20px;text-align:center;color:var(--muted);grid-column:1/-1}
 .empty .big{font-size:48px;margin-bottom:12px}
 .empty h3{color:white}
@@ -124,15 +117,11 @@ footer{border-top:1px solid #ffffff12;padding:25px 5%;display:flex;justify-conte
 footer strong{color:var(--orange)}
 .toast{position:fixed;bottom:22px;left:50%;transform:translate(-50%,20px);background:#21160e;border:1px solid #ff79185a;border-radius:12px;padding:13px 18px;color:white;opacity:0;transition:.25s;pointer-events:none;z-index:200;max-width:90vw;text-align:center}
 .toast.show{opacity:1;transform:translate(-50%,0)}
-.media-tile{border:1px solid #ffffff15;border-radius:15px;padding:20px;background:#111;display:flex;align-items:center;gap:16px}
-.media-tile .media-icon{font-size:34px}
-.media-tile h3{margin:0 0 6px}
-.media-tile p{margin:0;color:var(--muted);font-size:13px;line-height:1.5}
 #cursor-pumpkin{position:fixed;z-index:300;pointer-events:none;font-size:18px;display:none;filter:drop-shadow(0 0 7px #ff7918)}
 @media(hover:hover) and (pointer:fine){body.custom-cursor{cursor:crosshair}body.custom-cursor a,body.custom-cursor button,body.custom-cursor input,body.custom-cursor textarea,body.custom-cursor select{cursor:pointer}#cursor-pumpkin{display:block}}
 @media(max-width:1000px){.game-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.hero:after{right:4%;opacity:.7}.hero-content{max-width:570px}}
-@media(max-width:700px){header{padding:0 4%;height:auto;min-height:68px;flex-wrap:wrap;gap:8px;padding-top:10px;padding-bottom:10px}.brand{font-size:21px}.pumpkin{width:39px;height:39px}.nav{order:3;width:100%;margin:0;justify-content:center}.nav button{flex:1;padding:10px 4px;font-size:12px}.header-actions{margin-left:auto}.header-actions .primary{padding:10px;font-size:12px}main{padding-left:4%;padding-right:4%}.hero{min-height:440px;padding:36px 23px;align-items:flex-start}.hero-content{max-width:100%}.hero:after{font-size:120px;right:5%;top:auto;bottom:-12px;transform:none;opacity:.42}.hero:before{top:auto;bottom:-60px;right:0;transform:none}.hero h1{font-size:52px;letter-spacing:-3px}.hero p{font-size:15px}.game-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.card-body{padding:11px}.card-body h3{font-size:14px}.stats{gap:8px}.stat{padding:12px}.stat strong{font-size:20px}.form-grid{grid-template-columns:1fr}.field.full{grid-column:auto}.page-intro{padding-top:30px}.page-intro h1{font-size:43px}.section-heading h2{font-size:21px}}
-@media(max-width:390px){.game-grid{grid-template-columns:1fr}.cover{aspect-ratio:16/8}.hero h1{font-size:43px}.header-actions .primary{padding:9px}.nav button .nav-icon{display:block;margin:0 0 3px}.stats{grid-template-columns:1fr}}
+@media(max-width:700px){header{padding:10px 4%;flex-wrap:wrap;gap:8px}.brand{font-size:21px}.pumpkin{width:39px;height:39px}.nav{order:3;width:100%;margin:0;justify-content:center}.nav button{flex:1;padding:10px 4px;font-size:12px}.header-actions{margin-left:auto}.header-actions .primary{padding:10px;font-size:12px}main{padding-left:4%;padding-right:4%}.hero{min-height:440px;padding:36px 23px;align-items:flex-start}.hero-content{max-width:100%}.hero:after{font-size:120px;right:5%;top:auto;bottom:-12px;transform:none;opacity:.42}.hero:before{top:auto;bottom:-60px;right:0;transform:none}.hero h1{font-size:52px;letter-spacing:-3px}.hero p{font-size:15px}.game-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.card-body{padding:11px}.card-body h3{font-size:14px}.stats{gap:8px}.stat{padding:12px}.stat strong{font-size:20px}.form-grid{grid-template-columns:1fr}.field.full{grid-column:auto}.page-intro{padding-top:30px}.page-intro h1{font-size:43px}.section-heading h2{font-size:21px}}
+@media(max-width:390px){.game-grid{grid-template-columns:1fr}.cover{aspect-ratio:16/8}.hero h1{font-size:43px;letter-spacing:-2px}.header-actions .primary{padding:9px}.nav button .nav-icon{display:block;margin:0 0 3px}.stats{grid-template-columns:1fr}}
 </style>
 </head>
 <body class="custom-cursor">
@@ -149,164 +138,83 @@ footer strong{color:var(--orange)}
     <button id="navGames" onclick="showView('games')"><span class="nav-icon">🎮</span>Games</button>
     <button id="navMedia" onclick="showView('media')"><span class="nav-icon">▣</span>Media</button>
   </nav>
-  <div class="header-actions">
-    <button class="primary" onclick="showView('add')">＋ Add Game</button>
-  </div>
+  <div class="header-actions"><button class="primary" onclick="showView('add')">＋ Add Game</button></div>
 </header>
 
 <main>
-  <section class="view active" id="homeView">
-    <div class="hero">
-      <div class="hero-content">
-        <div class="eyebrow">Your Halloween gaming hideout</div>
-        <h1>ENTER THE<br><span>HAUNT.</span></h1>
-        <p>Welcome to HauntHub — your home for spooky adventures, awesome games, and late-night entertainment. The lights are low. The games are on.</p>
-        <div class="hero-buttons">
-          <button class="primary" onclick="showView('games')">🎮 Explore Games</button>
-          <button class="secondary" onclick="showView('media')">▣ Enter Media</button>
-        </div>
-        <div class="stats">
-          <div class="stat"><strong id="gameCount">0</strong><span>Games in your haunt</span></div>
-          <div class="stat"><strong>∞</strong><span>Spooky possibilities</span></div>
-          <div class="stat"><strong>🎃</strong><span>Halloween all year</span></div>
-        </div>
+<section class="view active" id="homeView">
+  <div class="hero">
+    <div class="hero-content">
+      <div class="eyebrow">Your Halloween gaming hideout</div>
+      <h1>ENTER THE<br><span>HAUNT.</span></h1>
+      <p>Welcome to HauntHub — your home for spooky adventures, awesome games, and late-night entertainment. The lights are low. The games are on.</p>
+      <div class="hero-buttons">
+        <button class="primary" onclick="showView('games')">🎮 Explore Games</button>
+        <button class="secondary" onclick="showView('media')">▣ Enter Media</button>
+      </div>
+      <div class="stats">
+        <div class="stat"><strong id="gameCount">0</strong><span>Games in your haunt</span></div>
+        <div class="stat"><strong>∞</strong><span>Spooky possibilities</span></div>
+        <div class="stat"><strong>🎃</strong><span>Halloween all year</span></div>
       </div>
     </div>
-    <div class="section-heading">
-      <div><h2><span class="heading-icon">✦</span>Recently Added</h2><p>Your latest games from the haunted arcade</p></div>
-      <button class="text-button" onclick="showView('games')">View all →</button>
-    </div>
-    <div class="game-grid" id="recentGrid"></div>
-    <div class="section-heading">
-      <div><h2><span class="heading-icon">☠</span>Make It Yours</h2><p>Your arcade, your rules</p></div>
-    </div>
-    <div class="panel">
-      <h2>Bring your own games.</h2>
-      <p style="color:var(--muted);line-height:1.7">Have an HTML game? Add its title, cover image, and code to put it in your own HauntHub arcade. Your games are saved in this browser.</p>
-      <button class="primary" onclick="showView('add')">＋ Add Your First Game</button>
-    </div>
-  </section>
+  </div>
+  <div class="section-heading"><div><h2><span class="heading-icon">✦</span>Recently Added</h2><p>Your latest games from the haunted arcade</p></div><button class="text-button" onclick="showView('games')">View all →</button></div>
+  <div class="game-grid" id="recentGrid"></div>
+  <div class="section-heading"><div><h2><span class="heading-icon">☠</span>Make It Yours</h2><p>Your arcade, your rules</p></div></div>
+  <div class="panel"><h2>Bring your own games.</h2><p style="color:var(--muted);line-height:1.7">Have an HTML game? Add its title, cover image, and code to put it in your own HauntHub arcade. Your games are saved in this browser.</p><button class="primary" onclick="showView('add')">＋ Add Your First Game</button></div>
+</section>
 
-  <section class="view" id="gamesView">
-    <div class="page-intro">
-      <div class="eyebrow">The haunted arcade</div>
-      <h1>THE <span style="color:var(--orange)">GAMES</span></h1>
-      <p>Pick your next adventure. Dare to play.</p>
-    </div>
-    <div class="toolbar">
-      <div class="search"><input id="gameSearch" type="search" placeholder="Search games..." oninput="renderGames()" aria-label="Search games"></div>
-      <select id="gameSort" onchange="renderGames()" aria-label="Sort games">
-        <option value="newest">Newest first</option>
-        <option value="az">Name A–Z</option>
-        <option value="za">Name Z–A</option>
-      </select>
-      <button class="primary" onclick="showView('add')">＋ Add Game</button>
-    </div>
-    <div class="game-grid" id="allGamesGrid"></div>
-  </section>
+<section class="view" id="gamesView">
+  <div class="page-intro"><div class="eyebrow">The haunted arcade</div><h1>THE <span style="color:var(--orange)">GAMES</span></h1><p>Pick your next adventure. Dare to play.</p></div>
+  <div class="toolbar">
+    <div class="search"><input id="gameSearch" type="search" placeholder="Search games..." oninput="renderGames()" aria-label="Search games"></div>
+    <select id="gameSort" onchange="renderGames()" aria-label="Sort games"><option value="newest">Newest first</option><option value="az">Name A–Z</option><option value="za">Name Z–A</option></select>
+    <button class="primary" onclick="showView('add')">＋ Add Game</button>
+  </div>
+  <div class="game-grid" id="allGamesGrid"></div>
+</section>
 
-  <section class="view" id="mediaView">
-    <div class="page-intro">
-      <div class="eyebrow">Beyond the arcade</div>
-      <h1>THE <span style="color:var(--orange)">MEDIA</span></h1>
-      <p>Explore your media corner of HauntHub.</p>
-    </div>
-    <div class="panel">
-      <h2>📺 Your media corner</h2>
-      <p style="color:var(--muted);line-height:1.7">Use this section for Halloween videos, trailers, artwork, and other media you have permission to share.</p>
-      <button class="primary" onclick="showView('addMedia')">＋ Add Media Link</button>
-    </div>
-    <div id="mediaGrid" class="game-grid"></div>
-    <div class="empty" id="mediaEmpty"><div class="big">🎬</div><h3>The screen is dark...</h3><p>Add your first media link to get started.</p></div>
-  </section>
+<section class="view" id="mediaView">
+  <div class="page-intro"><div class="eyebrow">Beyond the arcade</div><h1>THE <span style="color:var(--orange)">MEDIA</span></h1><p>Explore your media corner of HauntHub.</p></div>
+  <div class="panel"><h2>📺 Your media corner</h2><p style="color:var(--muted);line-height:1.7">Use this section for Halloween videos, trailers, artwork, and other media you have permission to share.</p><button class="primary" onclick="showView('addMedia')">＋ Add Media Link</button></div>
+  <div id="mediaGrid" class="game-grid"></div>
+  <div class="empty" id="mediaEmpty"><div class="big">🎬</div><h3>The screen is dark...</h3><p>Add your first media link to get started.</p></div>
+</section>
 
-  <section class="view" id="addView">
-    <div class="page-intro">
-      <div class="eyebrow">Expand the arcade</div>
-      <h1>ADD A <span style="color:var(--orange)">GAME</span></h1>
-      <p>Bring your own HTML game into HauntHub.</p>
-    </div>
-    <div class="panel">
-      <div class="notice"><strong>Important:</strong> Your HTML game runs inside a sandboxed frame. For safety, scripts in the game cannot access the main HauntHub page. Games are saved in this browser only, and large games may exceed browser storage limits. Only add code you trust.</div>
-      <form id="addGameForm">
-        <div class="form-grid">
-          <div class="field">
-            <label for="gameTitle">Game title *</label>
-            <input id="gameTitle" required maxlength="80" placeholder="e.g. Haunted Maze">
-          </div>
-          <div class="field">
-            <label for="gameCategory">Category</label>
-            <select id="gameCategory">
-              <option>Arcade</option><option>Horror</option><option>Adventure</option><option>Puzzle</option><option>Racing</option><option>Platformer</option><option>Other</option>
-            </select>
-          </div>
-          <div class="field full">
-            <label for="gameDescription">Short description</label>
-            <input id="gameDescription" maxlength="160" placeholder="What is this game about?">
-          </div>
-          <div class="field full">
-            <label for="gameImage">Cover image URL (optional)</label>
-            <input id="gameImage" type="url" placeholder="https://example.com/cover.jpg">
-            <small>Use an image URL you are allowed to use. Leave blank for the default Halloween cover.</small>
-          </div>
-          <div class="field full">
-            <label for="gameCode">Paste your complete HTML game code *</label>
-            <textarea id="gameCode" required spellcheck="false" placeholder="<!DOCTYPE html>
-<html>
-<head><title>My Game</title></head>
-<body>
-  <h1>My Game</h1>
-  <script>
-    // Your game code goes here
-  </script>
-</body>
-</html>"></textarea>
-            <small>Paste the entire HTML document, including CSS and JavaScript. External assets must be accessible to the game.</small>
-          </div>
-        </div>
-        <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:20px">
-          <button class="primary" type="submit">🎃 Save Game</button>
-          <button class="secondary" type="button" onclick="previewFormGame()">Preview Game</button>
-          <button class="secondary" type="button" onclick="showView('games')">Cancel</button>
-        </div>
-      </form>
-    </div>
-  </section>
+<section class="view" id="addView">
+  <div class="page-intro"><div class="eyebrow">Expand the arcade</div><h1>ADD A <span style="color:var(--orange)">GAME</span></h1><p>Bring your own HTML game into HauntHub.</p></div>
+  <div class="panel">
+    <div class="notice"><strong>Important:</strong> Your HTML game runs inside a sandboxed frame. Games are saved in this browser only. Only add code you trust.</div>
+    <form id="addGameForm">
+      <div class="form-grid">
+        <div class="field"><label for="gameTitle">Game title *</label><input id="gameTitle" required maxlength="80" placeholder="e.g. Haunted Maze"></div>
+        <div class="field"><label for="gameCategory">Category</label><select id="gameCategory"><option>Arcade</option><option>Horror</option><option>Adventure</option><option>Puzzle</option><option>Racing</option><option>Platformer</option><option>Other</option></select></div>
+        <div class="field full"><label for="gameDescription">Short description</label><input id="gameDescription" maxlength="160" placeholder="What is this game about?"></div>
+        <div class="field full"><label for="gameImage">Cover image URL (optional)</label><input id="gameImage" type="url" placeholder="https://example.com/cover.jpg"><small>Use an image URL you are allowed to use.</small></div>
+        <div class="field full"><label for="gameCode">Paste your complete HTML game code *</label><textarea id="gameCode" required spellcheck="false" placeholder="<!DOCTYPE html><html><body><h1>My Game</h1></body></html>"></textarea><small>Paste the complete HTML document, including CSS and JavaScript.</small></div>
+      </div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:20px"><button class="primary" type="submit">🎃 Save Game</button><button class="secondary" type="button" onclick="previewFormGame()">Preview Game</button><button class="secondary" type="button" onclick="showView('games')">Cancel</button></div>
+    </form>
+  </div>
+</section>
 
-  <section class="view" id="addMediaView">
-    <div class="page-intro"><div class="eyebrow">Expand the media room</div><h1>ADD <span style="color:var(--orange)">MEDIA</span></h1></div>
-    <div class="panel">
-      <form id="addMediaForm">
-        <div class="form-grid">
-          <div class="field"><label for="mediaTitle">Media title *</label><input id="mediaTitle" required maxlength="80" placeholder="Halloween trailer"></div>
-          <div class="field"><label for="mediaType">Media type</label><select id="mediaType"><option>Video</option><option>Trailer</option><option>Artwork</option><option>Other</option></select></div>
-          <div class="field full"><label for="mediaUrl">Media URL *</label><input id="mediaUrl" required type="url" placeholder="https://..."><small>Use a direct image/video URL or a public page you have permission to share.</small></div>
-        </div>
-        <div style="margin-top:18px;display:flex;gap:10px"><button class="primary" type="submit">＋ Save Media</button><button class="secondary" type="button" onclick="showView('media')">Cancel</button></div>
-      </form>
-    </div>
-  </section>
+<section class="view" id="addMediaView">
+  <div class="page-intro"><div class="eyebrow">Expand the media room</div><h1>ADD <span style="color:var(--orange)">MEDIA</span></h1></div>
+  <div class="panel"><form id="addMediaForm"><div class="form-grid">
+    <div class="field"><label for="mediaTitle">Media title *</label><input id="mediaTitle" required maxlength="80" placeholder="Halloween trailer"></div>
+    <div class="field"><label for="mediaType">Media type</label><select id="mediaType"><option>Video</option><option>Trailer</option><option>Artwork</option><option>Other</option></select></div>
+    <div class="field full"><label for="mediaUrl">Media URL *</label><input id="mediaUrl" required type="url" placeholder="https://..."><small>Use a public URL you have permission to share.</small></div>
+  </div><div style="margin-top:18px;display:flex;gap:10px"><button class="primary" type="submit">＋ Save Media</button><button class="secondary" type="button" onclick="showView('media')">Cancel</button></div></form></div>
+</section>
 </main>
 
-<footer>
-  <div><strong>🎃 HauntHub</strong> — Enter if you dare.</div>
-  <div>Made for the midnight gamers. <span style="color:var(--orange)">Stay spooky.</span></div>
-</footer>
+<footer><div><strong>🎃 HauntHub</strong> — Enter if you dare.</div><div>Made for the midnight gamers. <span style="color:var(--orange)">Stay spooky.</span></div></footer>
 </div>
 
 <div id="playerView" aria-label="Game player">
-  <div class="player-top">
-    <button class="pumpkin" style="width:38px;height:38px;font-size:22px" onclick="closePlayer()" title="Return home" aria-label="Return home">🎃</button>
-    <div class="player-title" id="playerTitle">Loading game...</div>
-    <button class="secondary" onclick="reloadGame()">↻ Restart</button>
-    <button class="primary" onclick="closePlayer()">✕ Exit Game</button>
-  </div>
-  <div id="loadingScreen">
-    <div class="loader-pumpkin">🎃</div>
-    <h2>SUMMONING YOUR GAME</h2>
-    <p id="loadingText">Waking the spirits...</p>
-    <div class="progress"><span></span></div>
-  </div>
+  <div class="player-top"><button class="pumpkin" style="width:38px;height:38px;font-size:22px" onclick="closePlayer()" title="Return home" aria-label="Return home">🎃</button><div class="player-title" id="playerTitle">Loading game...</div><button class="secondary" onclick="reloadGame()">↻ Restart</button><button class="primary" onclick="closePlayer()">✕ Exit Game</button></div>
+  <div id="loadingScreen"><div class="loader-pumpkin">🎃</div><h2>SUMMONING YOUR GAME</h2><p id="loadingText">Waking the spirits...</p><div class="progress"><span></span></div></div>
   <iframe id="gameFrame" title="Game window" sandbox="allow-scripts allow-forms allow-pointer-lock" allow="fullscreen" referrerpolicy="no-referrer"></iframe>
 </div>
 <div class="toast" id="toast" role="status"></div>
@@ -316,6 +224,7 @@ footer strong{color:var(--orange)}
 
 const GAME_STORAGE = "haunthub_games_v1";
 const MEDIA_STORAGE = "haunthub_media_v1";
+const COVER_BASE = "https://cdn.jsdelivr.net/gh/freebuisness/covers@main/";
 const $ = id => document.getElementById(id);
 
 let games = [];
@@ -324,327 +233,377 @@ let currentGame = null;
 let previewCode = null;
 let toastTimer = null;
 
-function safeRead(key) {
-  try {
-    const raw = localStorage.getItem(key);
-    return raw ? JSON.parse(raw) : [];
-  } catch (error) {
-    return [];
-  }
+const catalogEntries = [
+  ["60 Seconds! Reatomized","858.png","Adventure"],
+  ["Antonblast","711.png","Platformer"],
+  ["Bad Parenting 1","166.png","Horror"],
+  ["Baldi's Basics Plus","467.png","Horror"],
+  ["Bendy and the Ink Machine","215.png","Horror"],
+  ["Buckshot Roulette","205.png","Puzzle"],
+  ["Celeste","623.png","Platformer"],
+  ["Chat Bot AI (A.I GPT)","253.png","Other"],
+  ["Clover Pit","716.png","Arcade"],
+  ["Cuphead","465.png","Platformer"],
+  ["Five Nights at Freddy's: Pizza Simulator","191.png","Horror"],
+  ["Five Nights at Freddy's: Sister Location","185.png","Horror"],
+  ["Geometry Dash","868.png","Arcade"],
+  ["Half Life","262.png","Adventure"],
+  ["Hollow Knight","468.png","Adventure"],
+  ["Hollow Knight: Silksong","771.png","Adventure"],
+  ["Iron Lung","705.png","Horror"],
+  ["Just Shapes & Beats","826.png","Arcade"],
+  ["Karlson","542.png","Action"],
+  ["Kindergarten","445.png","Adventure"],
+  ["Lobotomy Corporation","850.png","Strategy"],
+  ["Minecraft 1.12.2","182.png","Adventure"],
+  ["OMORI","427.png","Adventure"],
+  ["Oneshot (LEGACY)","622.png","Adventure"],
+  ["People Playground","194-m.png","Sandbox"],
+  ["Pizza Tower","267.png","Platformer"],
+  ["R.E.P.O","195.png","Horror"],
+  ["Schoolboy Runaway","605.png","Adventure"],
+  ["Slime Rancher","591.png","Adventure"],
+  ["Soundboard","179.png","Other"],
+  ["Stick War: Legacy","666.png","Strategy"],
+  ["Tattletail","607.png","Horror"],
+  ["Terraria","669.png","Adventure"],
+  ["That's Not My Neighbor","216.png","Horror"],
+  ["Totally Accurate Battle Simulator (TABS)","827.png","Strategy"],
+  ["ULTRAKILL","196.png","Action"],
+  ["Untitled Goose Game","718.png","Adventure"],
+  ["WebFishing","423.png","Adventure"],
+  ["Your Only Move Is HUSTLE","776.png","Action"],
+  ["Yume Nikki","433.png","Adventure"]
+].map(([title,cover,category],index)=>({
+  id:"catalog-"+index,
+  title,
+  description:category+" · Playable link not configured",
+  category,
+  image:COVER_BASE+cover,
+  catalog:true
+}));
+
+function getAllGames(){
+  return [...games,...catalogEntries];
 }
 
-function safeSave(key, value) {
-  try {
-    localStorage.setItem(key, JSON.stringify(value));
+function safeRead(key){
+  try{
+    const raw=localStorage.getItem(key);
+    return raw?JSON.parse(raw):[];
+  }catch(error){return [];}
+}
+
+function safeSave(key,value){
+  try{
+    localStorage.setItem(key,JSON.stringify(value));
     return true;
-  } catch (error) {
+  }catch(error){
     notify("Browser storage is full. Try a smaller game or remove some saved games.");
     return false;
   }
 }
 
-function loadData() {
-  games = safeRead(GAME_STORAGE);
-  mediaItems = safeRead(MEDIA_STORAGE);
-  if (!Array.isArray(games)) games = [];
-  if (!Array.isArray(mediaItems)) mediaItems = [];
+function loadData(){
+  games=safeRead(GAME_STORAGE);
+  mediaItems=safeRead(MEDIA_STORAGE);
+  if(!Array.isArray(games))games=[];
+  if(!Array.isArray(mediaItems))mediaItems=[];
   updateCount();
 }
 
-function notify(message) {
-  const el = $("toast");
-  el.textContent = message;
+function notify(message){
+  const el=$("toast");
+  el.textContent=message;
   el.classList.add("show");
   clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => el.classList.remove("show"), 3000);
+  toastTimer=setTimeout(()=>el.classList.remove("show"),3000);
 }
 
-function updateCount() {
-  $("gameCount").textContent = games.length;
+function updateCount(){
+  $("gameCount").textContent=getAllGames().length;
 }
 
-function showView(name) {
-  const names = ["home", "games", "media", "add", "addMedia"];
-  names.forEach(n => {
-    const section = $(n + "View");
-    if (section) section.classList.toggle("active", n === name);
+function showView(name){
+  const names=["home","games","media","add","addMedia"];
+  names.forEach(n=>{
+    const section=$(n+"View");
+    if(section)section.classList.toggle("active",n===name);
   });
-  ["Home", "Games", "Media"].forEach(n => {
-    const btn = $("nav" + n);
-    if (btn) btn.classList.toggle("active", n.toLowerCase() === name);
+  ["Home","Games","Media"].forEach(n=>{
+    const btn=$("nav"+n);
+    if(btn)btn.classList.toggle("active",n.toLowerCase()===name);
   });
   $("playerView").classList.remove("active");
   window.scrollTo({top:0,behavior:"smooth"});
-  if (name === "games") renderGames();
-  if (name === "home") renderRecent();
-  if (name === "media") renderMedia();
+  if(name==="games")renderGames();
+  if(name==="home")renderRecent();
+  if(name==="media")renderMedia();
 }
 
-function goHome() {
+function goHome(){
   closePlayer(false);
   showView("home");
 }
 
-function makeCard(game, index) {
-  const card = document.createElement("article");
-  card.className = "game-card";
+function makeCard(game){
+  const card=document.createElement("article");
+  card.className="game-card";
 
-  const cover = document.createElement("div");
-  cover.className = "cover";
+  const cover=document.createElement("div");
+  cover.className="cover";
 
-  if (game.image && safeImageUrl(game.image)) {
-    const img = document.createElement("img");
-    img.src = game.image;
-    img.alt = game.title + " cover";
-    img.loading = "lazy";
-    img.onerror = () => img.remove();
+  if(game.image&&safeImageUrl(game.image)){
+    const img=document.createElement("img");
+    img.src=game.image;
+    img.alt=game.title+" cover";
+    img.loading="lazy";
+    img.onerror=()=>img.remove();
     cover.appendChild(img);
-  } else {
-    const emoji = document.createElement("div");
-    emoji.className = "cover-emoji";
-    emoji.textContent = game.category === "Horror" ? "👻" : "🎃";
+  }else{
+    const emoji=document.createElement("div");
+    emoji.className="cover-emoji";
+    emoji.textContent=game.category==="Horror"?"👻":"🎃";
     cover.appendChild(emoji);
   }
 
-  const body = document.createElement("div");
-  body.className = "card-body";
-  const title = document.createElement("h3");
-  title.textContent = game.title;
-  const desc = document.createElement("p");
-  desc.textContent = game.description || game.category || "Ready to play";
-  desc.title = desc.textContent;
+  const body=document.createElement("div");
+  body.className="card-body";
+  const title=document.createElement("h3");
+  title.textContent=game.title;
+  const desc=document.createElement("p");
+  desc.textContent=game.description||game.category||"Ready to play";
+  desc.title=desc.textContent;
 
-  const actions = document.createElement("div");
-  actions.className = "card-actions";
-  const play = document.createElement("button");
-  play.className = "play";
-  play.textContent = "▶ Play";
-  play.addEventListener("click", () => launchGame(game));
+  const actions=document.createElement("div");
+  actions.className="card-actions";
+  const play=document.createElement("button");
+
+  if(game.catalog){
+    play.className="unavailable";
+    play.textContent="Link Needed";
+    play.title="A verified playable link has not been configured.";
+    play.addEventListener("click",()=>notify("A verified playable link has not been configured for this catalog game."));
+  }else{
+    play.className="play";
+    play.textContent="▶ Play";
+    play.addEventListener("click",()=>launchGame(game));
+  }
   actions.appendChild(play);
 
-  const remove = document.createElement("button");
-  remove.className = "remove";
-  remove.textContent = "✕";
-  remove.title = "Remove this game";
-  remove.setAttribute("aria-label", "Remove " + game.title);
-  remove.addEventListener("click", () => deleteGame(game.id));
-  actions.appendChild(remove);
+  if(!game.catalog){
+    const remove=document.createElement("button");
+    remove.className="remove";
+    remove.textContent="✕";
+    remove.title="Remove this game";
+    remove.setAttribute("aria-label","Remove "+game.title);
+    remove.addEventListener("click",()=>deleteGame(game.id));
+    actions.appendChild(remove);
+  }
 
-  body.append(title, desc, actions);
-  card.append(cover, body);
+  body.append(title,desc,actions);
+  card.append(cover,body);
   return card;
 }
 
-function renderGames() {
-  const grid = $("allGamesGrid");
+function renderGames(){
+  const grid=$("allGamesGrid");
   grid.replaceChildren();
-  const query = $("gameSearch").value.trim().toLowerCase();
-  const sort = $("gameSort").value;
+  const query=$("gameSearch").value.trim().toLowerCase();
+  const sort=$("gameSort").value;
 
-  let filtered = games.filter(g =>
-    (g.title + " " + (g.description || "") + " " + (g.category || ""))
-      .toLowerCase().includes(query)
+  let filtered=getAllGames().filter(g=>
+    (g.title+" "+(g.description||"")+" "+(g.category||"")).toLowerCase().includes(query)
   );
 
-  if (sort === "az") filtered.sort((a,b) => a.title.localeCompare(b.title));
-  if (sort === "za") filtered.sort((a,b) => b.title.localeCompare(a.title));
-  if (sort === "newest") filtered.sort((a,b) => (b.createdAt || 0) - (a.createdAt || 0));
+  if(sort==="az")filtered.sort((a,b)=>a.title.localeCompare(b.title));
+  if(sort==="za")filtered.sort((a,b)=>b.title.localeCompare(a.title));
+  if(sort==="newest")filtered.sort((a,b)=>(b.createdAt||0)-(a.createdAt||0));
 
-  if (!filtered.length) {
-    grid.appendChild(emptyState(
-      query ? "No games found" : "Your arcade is waiting",
-      query ? "Try a different search." : "Add your first HTML game and it will appear here.",
-      query ? "🔎" : "🎃",
-      !query
-    ));
+  if(!filtered.length){
+    grid.appendChild(emptyState("No games found","Try a different search.","🔎",false));
     return;
   }
-  filtered.forEach((g, i) => grid.appendChild(makeCard(g, i)));
+  filtered.forEach(g=>grid.appendChild(makeCard(g)));
 }
 
-function renderRecent() {
-  const grid = $("recentGrid");
+function renderRecent(){
+  const grid=$("recentGrid");
   grid.replaceChildren();
-  const recent = [...games].sort((a,b) => (b.createdAt || 0) - (a.createdAt || 0)).slice(0,4);
-  if (!recent.length) {
-    grid.appendChild(emptyState("No games yet", "Add an HTML game to start building your arcade.", "🕹️", true));
-  } else {
-    recent.forEach((g,i) => grid.appendChild(makeCard(g,i)));
+  const recent=getAllGames().slice(0,4);
+  if(!recent.length){
+    grid.appendChild(emptyState("No games yet","Add an HTML game to start building your arcade.","🕹️",true));
+  }else{
+    recent.forEach(g=>grid.appendChild(makeCard(g)));
   }
   updateCount();
 }
 
-function emptyState(title, description, emoji, showAdd) {
-  const el = document.createElement("div");
-  el.className = "empty";
-  const icon = document.createElement("div");
-  icon.className = "big";
-  icon.textContent = emoji;
-  const h = document.createElement("h3");
-  h.textContent = title;
-  const p = document.createElement("p");
-  p.textContent = description;
+function emptyState(title,description,emoji,showAdd){
+  const el=document.createElement("div");
+  el.className="empty";
+  const icon=document.createElement("div");
+  icon.className="big";
+  icon.textContent=emoji;
+  const h=document.createElement("h3");
+  h.textContent=title;
+  const p=document.createElement("p");
+  p.textContent=description;
   el.append(icon,h,p);
-  if (showAdd) {
-    const b = document.createElement("button");
-    b.className = "primary";
-    b.textContent = "＋ Add a Game";
-    b.style.marginTop = "10px";
-    b.addEventListener("click", () => showView("add"));
+  if(showAdd){
+    const b=document.createElement("button");
+    b.className="primary";
+    b.textContent="＋ Add a Game";
+    b.style.marginTop="10px";
+    b.addEventListener("click",()=>showView("add"));
     el.appendChild(b);
   }
   return el;
 }
 
-function safeImageUrl(value) {
-  try {
-    const url = new URL(value, location.href);
-    return url.protocol === "https:" || url.protocol === "http:";
-  } catch (e) {
-    return false;
-  }
+function safeImageUrl(value){
+  try{
+    const url=new URL(value,location.href);
+    return url.protocol==="https:"||url.protocol==="http:";
+  }catch(e){return false;}
 }
 
-function launchGame(game) {
-  if (!game || typeof game.code !== "string") {
-    notify("This game has no HTML code.");
+function launchGame(game){
+  if(!game||typeof game.code!=="string"){
+    notify("This game has no HTML code yet.");
     return;
   }
-  currentGame = game;
-  previewCode = null;
-  openPlayer(game.title, game.code);
+  currentGame=game;
+  previewCode=null;
+  openPlayer(game.title,game.code);
 }
 
-function previewFormGame() {
-  const title = $("gameTitle").value.trim() || "Game Preview";
-  const code = $("gameCode").value;
-  if (!code.trim()) {
+function previewFormGame(){
+  const title=$("gameTitle").value.trim()||"Game Preview";
+  const code=$("gameCode").value;
+  if(!code.trim()){
     notify("Paste your HTML game code first.");
     return;
   }
-  currentGame = null;
-  previewCode = code;
-  openPlayer(title + " — Preview", code);
+  currentGame=null;
+  previewCode=code;
+  openPlayer(title+" — Preview",code);
 }
 
-function openPlayer(title, code) {
-  $("playerTitle").textContent = title;
-  $("loadingText").textContent = "Waking the spirits...";
-  $("loadingScreen").style.display = "flex";
-  $("loadingScreen").querySelector(".progress span").style.animation = "none";
+function openPlayer(title,code){
+  $("playerTitle").textContent=title;
+  $("loadingText").textContent="Waking the spirits...";
+  $("loadingScreen").style.display="flex";
+  const bar=$("loadingScreen").querySelector(".progress span");
+  bar.style.animation="none";
   void $("loadingScreen").offsetWidth;
-  $("loadingScreen").querySelector(".progress span").style.animation = "progress 1.5s ease forwards";
+  bar.style.animation="progress 1.5s ease forwards";
   $("playerView").classList.add("active");
-  document.body.style.overflow = "hidden";
-  $("gameFrame").srcdoc = "";
-  setTimeout(() => {
-    $("gameFrame").srcdoc = code;
-    $("loadingText").textContent = "Opening the gates...";
-    setTimeout(() => {
-      $("loadingScreen").style.display = "none";
-    }, 1400);
-  }, 120);
+  document.body.style.overflow="hidden";
+  $("gameFrame").srcdoc="";
+  setTimeout(()=>{
+    $("gameFrame").srcdoc=code;
+    $("loadingText").textContent="Opening the gates...";
+    setTimeout(()=>$("loadingScreen").style.display="none",1400);
+  },120);
 }
 
-function reloadGame() {
-  if (currentGame) launchGame(currentGame);
-  else if (previewCode !== null) openPlayer($("playerTitle").textContent, previewCode);
+function reloadGame(){
+  if(currentGame)launchGame(currentGame);
+  else if(previewCode!==null)openPlayer($("playerTitle").textContent,previewCode);
 }
 
-function closePlayer(returnHome = true) {
+function closePlayer(returnHome=true){
   $("playerView").classList.remove("active");
-  $("gameFrame").srcdoc = "";
-  $("loadingScreen").style.display = "flex";
-  document.body.style.overflow = "";
-  currentGame = null;
-  previewCode = null;
-  if (returnHome) showView("home");
+  $("gameFrame").srcdoc="";
+  $("loadingScreen").style.display="flex";
+  document.body.style.overflow="";
+  currentGame=null;
+  previewCode=null;
+  if(returnHome)showView("home");
 }
 
-function deleteGame(id) {
-  const game = games.find(g => g.id === id);
-  if (!game) return;
-  if (!confirm('Remove "' + game.title + '" from this browser?')) return;
-  const updated = games.filter(g => g.id !== id);
-  if (safeSave(GAME_STORAGE, updated)) {
-    games = updated;
+function deleteGame(id){
+  const game=games.find(g=>g.id===id);
+  if(!game)return;
+  if(!confirm('Remove "'+game.title+'" from this browser?'))return;
+  const updated=games.filter(g=>g.id!==id);
+  if(safeSave(GAME_STORAGE,updated)){
+    games=updated;
     renderGames();
     renderRecent();
     notify("Game removed.");
   }
 }
 
-$("addGameForm").addEventListener("submit", event => {
+$("addGameForm").addEventListener("submit",event=>{
   event.preventDefault();
+  const title=$("gameTitle").value.trim();
+  const description=$("gameDescription").value.trim();
+  const image=$("gameImage").value.trim();
+  const category=$("gameCategory").value;
+  const code=$("gameCode").value;
 
-  const title = $("gameTitle").value.trim();
-  const description = $("gameDescription").value.trim();
-  const image = $("gameImage").value.trim();
-  const category = $("gameCategory").value;
-  const code = $("gameCode").value;
-
-  if (!title || !code.trim()) {
+  if(!title||!code.trim()){
     notify("A title and HTML code are required.");
     return;
   }
-  if (image && !safeImageUrl(image)) {
+  if(image&&!safeImageUrl(image)){
     notify("Please use a valid HTTP or HTTPS image URL.");
     return;
   }
 
-  const game = {
-    id: Date.now().toString(36) + Math.random().toString(36).slice(2,8),
-    title, description, image, category, code,
-    createdAt: Date.now()
+  const game={
+    id:Date.now().toString(36)+Math.random().toString(36).slice(2,8),
+    title,description,image,category,code,createdAt:Date.now()
   };
+  const updated=[...games,game];
+  if(!safeSave(GAME_STORAGE,updated))return;
 
-  const updated = [...games, game];
-  if (!safeSave(GAME_STORAGE, updated)) return;
-
-  games = updated;
+  games=updated;
   $("addGameForm").reset();
   updateCount();
   renderGames();
   renderRecent();
   showView("games");
-  notify("🎃 " + title + " added to your arcade!");
+  notify("🎃 "+title+" added to your arcade!");
 });
 
-function renderMedia() {
-  const grid = $("mediaGrid");
+function renderMedia(){
+  const grid=$("mediaGrid");
   grid.replaceChildren();
-  $("mediaEmpty").style.display = mediaItems.length ? "none" : "block";
+  $("mediaEmpty").style.display=mediaItems.length?"none":"block";
 
-  mediaItems.forEach(item => {
-    const card = document.createElement("article");
-    card.className = "game-card";
-    const cover = document.createElement("div");
-    cover.className = "cover";
-    const emoji = document.createElement("div");
-    emoji.className = "cover-emoji";
-    emoji.textContent = item.type === "Artwork" ? "🖼️" : "🎬";
+  mediaItems.forEach(item=>{
+    const card=document.createElement("article");
+    card.className="game-card";
+    const cover=document.createElement("div");
+    cover.className="cover";
+    const emoji=document.createElement("div");
+    emoji.className="cover-emoji";
+    emoji.textContent=item.type==="Artwork"?"🖼️":"🎬";
     cover.appendChild(emoji);
 
-    const body = document.createElement("div");
-    body.className = "card-body";
-    const h = document.createElement("h3");
-    h.textContent = item.title;
-    const p = document.createElement("p");
-    p.textContent = item.type;
-    const actions = document.createElement("div");
-    actions.className = "card-actions";
-    const open = document.createElement("button");
-    open.className = "play";
-    open.textContent = "Open Media ↗";
-    open.addEventListener("click", () => window.open(item.url, "_blank", "noopener,noreferrer"));
-    const remove = document.createElement("button");
-    remove.className = "remove";
-    remove.textContent = "✕";
-    remove.addEventListener("click", () => {
-      if (!confirm('Remove "' + item.title + '"?')) return;
-      const updated = mediaItems.filter(x => x.id !== item.id);
-      if (safeSave(MEDIA_STORAGE, updated)) {
-        mediaItems = updated;
+    const body=document.createElement("div");
+    body.className="card-body";
+    const h=document.createElement("h3");
+    h.textContent=item.title;
+    const p=document.createElement("p");
+    p.textContent=item.type;
+    const actions=document.createElement("div");
+    actions.className="card-actions";
+    const open=document.createElement("button");
+    open.className="play";
+    open.textContent="Open Media ↗";
+    open.addEventListener("click",()=>window.open(item.url,"_blank","noopener,noreferrer"));
+    const remove=document.createElement("button");
+    remove.className="remove";
+    remove.textContent="✕";
+    remove.addEventListener("click",()=>{
+      if(!confirm('Remove "'+item.title+'"?'))return;
+      const updated=mediaItems.filter(x=>x.id!==item.id);
+      if(safeSave(MEDIA_STORAGE,updated)){
+        mediaItems=updated;
         renderMedia();
         notify("Media removed.");
       }
@@ -656,43 +615,43 @@ function renderMedia() {
   });
 }
 
-$("addMediaForm").addEventListener("submit", event => {
+$("addMediaForm").addEventListener("submit",event=>{
   event.preventDefault();
-  const title = $("mediaTitle").value.trim();
-  const url = $("mediaUrl").value.trim();
-  const type = $("mediaType").value;
+  const title=$("mediaTitle").value.trim();
+  const url=$("mediaUrl").value.trim();
+  const type=$("mediaType").value;
 
-  if (!safeImageUrl(url)) {
+  if(!safeImageUrl(url)){
     notify("Please enter a valid HTTP or HTTPS URL.");
     return;
   }
-  const item = {id:Date.now().toString(36),title,url,type};
-  const updated = [...mediaItems,item];
-  if (!safeSave(MEDIA_STORAGE,updated)) return;
-  mediaItems = updated;
+  const item={id:Date.now().toString(36),title,url,type};
+  const updated=[...mediaItems,item];
+  if(!safeSave(MEDIA_STORAGE,updated))return;
+  mediaItems=updated;
   $("addMediaForm").reset();
   renderMedia();
   showView("media");
   notify("Media added!");
 });
 
-function createEmbers() {
-  const container = $("effects");
-  for (let i=0; i<38; i++) {
-    const ember = document.createElement("span");
-    ember.className = "ember";
-    ember.style.left = Math.random()*100 + "%";
-    ember.style.animationDuration = (7 + Math.random()*13) + "s";
-    ember.style.animationDelay = (-Math.random()*20) + "s";
-    ember.style.width = ember.style.height = (2 + Math.random()*3) + "px";
+function createEmbers(){
+  const container=$("effects");
+  for(let i=0;i<38;i++){
+    const ember=document.createElement("span");
+    ember.className="ember";
+    ember.style.left=Math.random()*100+"%";
+    ember.style.animationDuration=(7+Math.random()*13)+"s";
+    ember.style.animationDelay=(-Math.random()*20)+"s";
+    ember.style.width=ember.style.height=(2+Math.random()*3)+"px";
     container.appendChild(ember);
   }
 }
 
-document.addEventListener("mousemove", event => {
-  const cursor = $("cursor-pumpkin");
-  cursor.style.left = (event.clientX + 12) + "px";
-  cursor.style.top = (event.clientY + 12) + "px";
+document.addEventListener("mousemove",event=>{
+  const cursor=$("cursor-pumpkin");
+  cursor.style.left=(event.clientX+12)+"px";
+  cursor.style.top=(event.clientY+12)+"px";
 });
 
 loadData();
