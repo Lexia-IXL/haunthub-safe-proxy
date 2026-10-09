@@ -1,6 +1,750 @@
 
-const catalogEntries = [];
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#100b09">
+<title>HauntHub — Enter the Haunt</title>
 
+<style>
+:root {
+  --bg: #100b09;
+  --panel: #1b120f;
+  --panel2: #241711;
+  --orange: #ff7628;
+  --orange2: #ff9a45;
+  --text: #fff4e9;
+  --muted: #bba99b;
+  --border: #42271b;
+  --green: #a9d58a;
+}
+
+* { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  color: var(--text);
+  background:
+    radial-gradient(ellipse at 50% 0%, #3b1c0d 0%, transparent 45%),
+    var(--bg);
+  font-family: Inter, "Segoe UI", Arial, sans-serif;
+  min-height: 100vh;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: -1;
+  opacity: .15;
+  background-image:
+    radial-gradient(#ff8a38 1px, transparent 1px);
+  background-size: 42px 42px;
+}
+
+button, input, select, textarea { font: inherit; }
+
+button { cursor: pointer; }
+
+a { color: var(--orange2); }
+
+header {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: rgba(16, 11, 9, .93);
+  border-bottom: 1px solid var(--border);
+  backdrop-filter: blur(14px);
+}
+
+.nav {
+  max-width: 1400px;
+  min-height: 76px;
+  margin: auto;
+  padding: 14px 24px;
+  display: flex;
+  gap: 22px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 23px;
+  font-weight: 950;
+  letter-spacing: -1px;
+  white-space: nowrap;
+}
+
+.pumpkin {
+  font-size: 31px;
+  filter: drop-shadow(0 0 12px #ff762866);
+}
+
+.brand span:last-child { color: var(--orange); }
+
+.navlinks {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.navlinks button,
+.btn {
+  color: var(--text);
+  background: transparent;
+  border: 1px solid transparent;
+  padding: 10px 14px;
+  border-radius: 9px;
+  font-weight: 750;
+  transition: .18s ease;
+}
+
+.navlinks button:hover,
+.navlinks button.active {
+  background: #ff762818;
+  border-color: #73391f;
+  color: var(--orange2);
+}
+
+.btn-primary {
+  background: var(--orange);
+  color: #1b0d05;
+  border: 1px solid var(--orange);
+  font-weight: 900;
+}
+
+.btn-primary:hover {
+  background: var(--orange2);
+  transform: translateY(-1px);
+}
+
+.btn-secondary {
+  background: #261811;
+  border: 1px solid #58321f;
+}
+
+.btn-secondary:hover { border-color: var(--orange); }
+
+main {
+  width: min(1400px, 100%);
+  margin: auto;
+  padding: 0 24px 70px;
+}
+
+.view { display: none; }
+.view.active { display: block; }
+
+.hero {
+  position: relative;
+  overflow: hidden;
+  min-height: 350px;
+  margin: 32px 0 48px;
+  padding: 58px clamp(24px, 6vw, 82px);
+  border: 1px solid #65341e;
+  border-radius: 22px;
+  background:
+    radial-gradient(ellipse at 80% 50%, #7a321d77, transparent 35%),
+    linear-gradient(115deg, #28150f, #130c09 65%);
+  display: flex;
+  align-items: center;
+}
+
+.hero::after {
+  content: "🎃";
+  position: absolute;
+  right: 8%;
+  top: 50%;
+  transform: translateY(-50%) rotate(9deg);
+  font-size: clamp(100px, 19vw, 235px);
+  filter: drop-shadow(0 0 30px #ff762833);
+  opacity: .88;
+  pointer-events: none;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 1;
+  max-width: 690px;
+}
+
+.eyebrow {
+  color: var(--orange2);
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+}
+
+h1 {
+  font-size: clamp(42px, 7vw, 82px);
+  line-height: .97;
+  letter-spacing: -4px;
+  margin: 18px 0;
+  font-weight: 1000;
+}
+
+h1 span { color: var(--orange); }
+
+.hero p {
+  color: #d1bdb0;
+  max-width: 520px;
+  line-height: 1.7;
+  font-size: 16px;
+}
+
+.hero-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 24px;
+}
+
+.section-head {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 16px;
+  margin: 35px 0 20px;
+  flex-wrap: wrap;
+}
+
+.section-head h2 {
+  font-size: 27px;
+  margin: 0;
+  letter-spacing: -1px;
+}
+
+.section-head p {
+  color: var(--muted);
+  margin: 7px 0 0;
+  font-size: 14px;
+}
+
+.orange { color: var(--orange); }
+
+.toolbar {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin: 20px 0;
+}
+
+.field {
+  color: var(--text);
+  background: #1b120f;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px 14px;
+  outline: none;
+  min-width: 0;
+}
+
+.field:focus {
+  border-color: var(--orange);
+  box-shadow: 0 0 0 3px #ff76281c;
+}
+
+.search { flex: 1; min-width: 210px; }
+select.field { cursor: pointer; }
+
+.game-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.game-card {
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  background: linear-gradient(145deg, #21140f, #150e0b);
+  border-radius: 14px;
+  transition: transform .2s, border-color .2s, box-shadow .2s;
+}
+
+.game-card:hover {
+  transform: translateY(-4px);
+  border-color: #a54c24;
+  box-shadow: 0 12px 28px #0005;
+}
+
+.cover {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+  background: #2b1a12;
+  border-bottom: 1px solid var(--border);
+}
+
+.cover-fallback {
+  aspect-ratio: 16 / 10;
+  display: grid;
+  place-items: center;
+  font-size: 48px;
+  background: radial-gradient(circle, #512514, #1a100c 70%);
+  border-bottom: 1px solid var(--border);
+}
+
+.game-info { padding: 13px; }
+
+.game-title {
+  margin: 0 0 7px;
+  font-size: 15px;
+  font-weight: 850;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+
+.game-desc {
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.5;
+  min-height: 18px;
+  margin: 0 0 13px;
+}
+
+.game-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.tag {
+  display: inline-block;
+  background: #ff762817;
+  border: 1px solid #71391e;
+  border-radius: 100px;
+  padding: 4px 8px;
+  font-size: 10px;
+  font-weight: 800;
+  color: var(--orange2);
+}
+
+.game-id {
+  color: #927b6c;
+  font-size: 10px;
+}
+
+.play-btn {
+  width: 100%;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #793c20;
+  background: #ff76281c;
+  color: var(--orange2);
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.play-btn:hover {
+  background: var(--orange);
+  color: #1b0d05;
+}
+
+.status {
+  margin: 20px 0;
+  padding: 18px;
+  border: 1px solid var(--border);
+  background: #1b120f;
+  border-radius: 12px;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.status.error { border-color: #853a31; color: #ffb6a6; }
+.status.success { border-color: #456b37; color: var(--green); }
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin: 25px 0;
+}
+
+.stat {
+  background: #1b120f;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.stat strong {
+  display: block;
+  font-size: 27px;
+  color: var(--orange);
+}
+
+.stat span {
+  display: block;
+  color: var(--muted);
+  font-size: 12px;
+  margin-top: 5px;
+}
+
+.form-panel {
+  max-width: 700px;
+  margin: 30px auto;
+  padding: clamp(20px, 5vw, 38px);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: var(--panel);
+}
+
+.form-panel h2 { margin-top: 0; }
+
+.form-panel label {
+  display: block;
+  margin: 18px 0 7px;
+  font-size: 13px;
+  font-weight: 800;
+  color: #e9d6c8;
+}
+
+.form-panel .field { width: 100%; }
+
+.form-note {
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.6;
+  margin-top: 12px;
+}
+
+.media-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.media-card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 18px;
+  overflow-wrap: anywhere;
+}
+
+.media-card h3 { margin: 0 0 8px; }
+.media-card p { color: var(--muted); line-height: 1.5; font-size: 13px; }
+
+.media-card a { word-break: break-all; }
+
+.player {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: #080605;
+  display: none;
+  flex-direction: column;
+}
+
+.player.open { display: flex; }
+
+.player-bar {
+  min-height: 60px;
+  padding: 10px 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #170f0b;
+  border-bottom: 1px solid var(--border);
+}
+
+.player-title {
+  flex: 1;
+  font-weight: 850;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.player iframe {
+  flex: 1;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  background: #fff;
+}
+
+.player-help {
+  color: var(--muted);
+  padding: 8px 14px;
+  font-size: 11px;
+  background: #170f0b;
+}
+
+footer {
+  border-top: 1px solid var(--border);
+  color: #9b8475;
+  text-align: center;
+  padding: 25px;
+  font-size: 12px;
+}
+
+.embers {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: -1;
+}
+
+.ember {
+  position: absolute;
+  bottom: -10px;
+  width: 4px;
+  height: 4px;
+  background: var(--orange);
+  border-radius: 50%;
+  opacity: .4;
+  animation: rise 10s linear infinite;
+}
+
+@keyframes rise {
+  from { transform: translateY(0); opacity: 0; }
+  15% { opacity: .45; }
+  to { transform: translateY(-110vh); opacity: 0; }
+}
+
+.empty {
+  text-align: center;
+  padding: 45px 20px;
+  color: var(--muted);
+  grid-column: 1 / -1;
+  border: 1px dashed var(--border);
+  border-radius: 14px;
+}
+
+@media (max-width: 1100px) {
+  .game-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
+
+@media (max-width: 800px) {
+  .nav { flex-wrap: wrap; padding: 12px 16px; }
+  .navlinks { width: 100%; justify-content: center; }
+  main { padding: 0 16px 50px; }
+  .hero { min-height: 310px; padding: 38px 25px; }
+  .hero::after { right: -20px; opacity: .22; }
+  h1 { letter-spacing: -2px; }
+  .game-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .media-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 520px) {
+  .brand { font-size: 20px; }
+  .navlinks { gap: 3px; }
+  .navlinks button { padding: 9px; font-size: 12px; }
+  .game-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 11px; }
+  .game-info { padding: 10px; }
+  .game-title { font-size: 13px; }
+  .stats { grid-template-columns: 1fr; }
+  .media-grid { grid-template-columns: 1fr; }
+  .player-bar .btn { padding: 9px; font-size: 12px; }
+}
+</style>
+</head>
+
+<body>
+<div class="embers" id="embers"></div>
+
+<header>
+  <nav class="nav">
+    <div class="brand">
+      <span class="pumpkin">🎃</span>
+      <span>Haunt<span>Hub</span></span>
+    </div>
+
+    <div class="navlinks">
+      <button class="active" data-view="home">Home</button>
+      <button data-view="games">Games</button>
+      <button data-view="media">Media</button>
+      <button data-view="add">Add Game</button>
+    </div>
+  </nav>
+</header>
+
+<main>
+  <section class="view active" id="view-home">
+    <div class="hero">
+      <div class="hero-content">
+        <div class="eyebrow">Welcome to the arcade after dark</div>
+        <h1>ENTER THE<br><span>HAUNT.</span></h1>
+        <p>
+          Your Halloween-themed arcade. Explore the game collection,
+          discover something new, and jump straight into the action.
+        </p>
+        <div class="hero-actions">
+          <button class="btn btn-primary" data-view="games">Explore Games ↗</button>
+          <button class="btn btn-secondary" data-view="media">Open Media</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="stats">
+      <div class="stat">
+        <strong id="stat-games">0</strong>
+        <span>Games available</span>
+      </div>
+      <div class="stat">
+        <strong id="stat-custom">0</strong>
+        <span>Your added games</span>
+      </div>
+      <div class="stat">
+        <strong>∞</strong>
+        <span>Arcade adventures</span>
+      </div>
+    </div>
+
+    <div class="section-head">
+      <div>
+        <h2>Fresh from the <span class="orange">crypt</span></h2>
+        <p>Jump back into the arcade.</p>
+      </div>
+      <button class="btn btn-secondary" data-view="games">View all games →</button>
+    </div>
+
+    <div id="home-status" class="status">Loading the game collection…</div>
+    <div class="game-grid" id="recent-grid"></div>
+  </section>
+
+  <section class="view" id="view-games">
+    <div class="section-head">
+      <div>
+        <div class="eyebrow">The complete collection</div>
+        <h2>THE <span class="orange">GAME GRAVEYARD</span></h2>
+        <p id="game-count">Loading games…</p>
+      </div>
+    </div>
+
+    <div class="toolbar">
+      <input id="search" class="field search" type="search"
+        placeholder="Search games…" autocomplete="off">
+
+      <select id="sort" class="field" aria-label="Sort games">
+        <option value="name">Sort: A–Z</option>
+        <option value="name-desc">Sort: Z–A</option>
+        <option value="id">Sort: Game ID</option>
+      </select>
+    </div>
+
+    <div id="games-status" class="status">Connecting to the game database…</div>
+    <div id="games-grid" class="game-grid"></div>
+  </section>
+
+  <section class="view" id="view-media">
+    <div class="section-head">
+      <div>
+        <div class="eyebrow">Beyond the arcade</div>
+        <h2>THE <span class="orange">MEDIA VAULT</span></h2>
+        <p>Keep your favorite media links in one place.</p>
+      </div>
+      <button class="btn btn-primary" data-view="add-media">+ Add Media</button>
+    </div>
+
+    <div id="media-grid" class="media-grid"></div>
+
+    <div id="media-form" class="form-panel" style="display:none">
+      <h2>Add to the Media Vault</h2>
+      <form id="add-media-form">
+        <label for="media-title">Title</label>
+        <input class="field" id="media-title" required maxlength="100"
+          placeholder="Give it a name">
+
+        <label for="media-url">Link</label>
+        <input class="field" id="media-url" required type="url"
+          placeholder="https://example.com">
+
+        <label for="media-description">Description</label>
+        <textarea class="field" id="media-description" rows="3"
+          maxlength="300" placeholder="What's this link?"></textarea>
+
+        <div class="hero-actions">
+          <button class="btn btn-primary" type="submit">Save Media</button>
+          <button class="btn btn-secondary" id="cancel-media" type="button">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <section class="view" id="view-add">
+    <div class="form-panel">
+      <div class="eyebrow">Expand the arcade</div>
+      <h2>Add a <span class="orange">Game</span></h2>
+      <p class="form-note">
+        Add a game hosted on a website that permits embedding, or open it in
+        a new tab. Your custom entries are saved in this browser.
+      </p>
+
+      <form id="add-game-form">
+        <label for="custom-title">Game title</label>
+        <input class="field" id="custom-title" required maxlength="100"
+          placeholder="Enter game name">
+
+        <label for="custom-url">Playable game URL</label>
+        <input class="field" id="custom-url" type="url" required
+          placeholder="https://example.com/game.html">
+
+        <label for="custom-cover">Cover image URL (optional)</label>
+        <input class="field" id="custom-cover" type="url"
+          placeholder="https://example.com/cover.jpg">
+
+        <label for="custom-description">Description (optional)</label>
+        <textarea class="field" id="custom-description" rows="3"
+          maxlength="300" placeholder="Describe your game"></textarea>
+
+        <div class="hero-actions">
+          <button class="btn btn-primary" type="submit">Add to HauntHub</button>
+          <button class="btn btn-secondary" type="reset">Clear</button>
+        </div>
+        <p class="form-note">
+          Some sites block embedding. If a game doesn't load in the player,
+          use the “New Tab” button instead.
+        </p>
+      </form>
+      <div id="add-status" aria-live="polite"></div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div>🎃 HauntHub · Enter the haunt.</div>
+  <div style="margin-top:7px">Game files are hosted by their respective sources.</div>
+</footer>
+
+<div class="player" id="player" aria-hidden="true">
+  <div class="player-bar">
+    <button class="btn btn-secondary" id="player-back">← Back</button>
+    <div class="player-title" id="player-title">Now Playing</div>
+    <button class="btn btn-secondary" id="player-newtab">New Tab ↗</button>
+    <button class="btn btn-primary" id="player-close">✕ Close</button>
+  </div>
+  <iframe id="game-frame" title="Game player"
+    allow="fullscreen; autoplay; gamepad"
+    allowfullscreen
+    sandbox="allow-scripts allow-forms allow-pointer-lock allow-same-origin allow-downloads">
+  </iframe>
+  <div class="player-help">
+    If the game does not appear, try “New Tab”. Some websites prevent embedded playback.
+  </div>
+</div>
+
+<script>
+"use strict";
+
+/*
+  GN-Math publishes its game list in zones.json.
+  Entries with url: "local" use the matching numbered HTML file.
+*/
 const GN_MATH_ZONES =
   "https://cdn.jsdelivr.net/gh/gn-math/assets@main/zones.json";
 
@@ -10,97 +754,514 @@ const GN_MATH_HTML =
 const GN_MATH_COVERS =
   "https://cdn.jsdelivr.net/gh/gn-math/covers@main";
 
-function resolveGnMathUrl(value, base) {
+const STORAGE_GAMES = "haunthub-custom-games-v2";
+const STORAGE_MEDIA = "haunthub-media-v2";
+
+let catalogEntries = [];
+let customGames = readStorage(STORAGE_GAMES, []);
+let mediaItems = readStorage(STORAGE_MEDIA, []);
+let currentGame = null;
+let loadingFailed = false;
+
+const $ = (selector) => document.querySelector(selector);
+
+function readStorage(key, fallback) {
+  try {
+    const value = JSON.parse(localStorage.getItem(key) || "null");
+    return Array.isArray(value) ? value : fallback;
+  } catch {
+    return fallback;
+  }
+}
+
+function writeStorage(key, value) {
+  try {
+    localStorage.setItem(key, JSON.stringify(value));
+  } catch (error) {
+    console.warn("Could not save local data:", error);
+  }
+}
+
+function escapeHTML(value) {
+  return String(value ?? "").replace(/[&<>"']/g, char => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#39;"
+  })[char]);
+}
+
+function validHttpUrl(value) {
+  try {
+    const url = new URL(value);
+    return url.protocol === "https:" || url.protocol === "http:";
+  } catch {
+    return false;
+  }
+}
+
+function safeExternalUrl(value) {
+  return validHttpUrl(value) ? value : "";
+}
+
+function resolveCover(value) {
   if (!value || typeof value !== "string") return "";
 
-  if (value.startsWith("http://") ||
-      value.startsWith("https://")) {
-    return value;
+  value = value
+    .replaceAll("{COVER_URL}", GN_MATH_COVERS)
+    .replaceAll("{HTML_URL}", GN_MATH_HTML);
+
+  if (validHttpUrl(value)) return value;
+
+  if (value.startsWith("/")) value = value.slice(1);
+
+  return `${GN_MATH_COVERS}/${value}`;
+}
+
+function resolveGameUrl(game) {
+  const value = String(game.url || "").trim();
+
+  if (!value) return "";
+
+  if (value.toLowerCase() === "local") {
+    return `${GN_MATH_HTML}/${encodeURIComponent(game.id)}.html`;
   }
 
-  value = value
+  const expanded = value
     .replaceAll("{HTML_URL}", GN_MATH_HTML)
     .replaceAll("{COVER_URL}", GN_MATH_COVERS);
 
-  if (value.startsWith("local")) return "";
+  if (validHttpUrl(expanded)) return expanded;
 
-  if (value.startsWith("/")) {
-    value = value.slice(1);
+  if (expanded.startsWith("/")) {
+    return `${GN_MATH_HTML}${expanded}`;
   }
 
-  if (!value.startsWith("http")) {
-    value = `${base}/${value}`;
-  }
-
-  return value;
+  return `${GN_MATH_HTML}/${expanded.replace(/^\.?\//, "")}`;
 }
 
-async function loadGnMathGames() {
+function normalizeGame(game) {
+  const url = resolveGameUrl(game);
+  if (!url || !validHttpUrl(url)) return null;
+
+  return {
+    id: `gn-${String(game.id)}`,
+    title: String(game.name || `Game ${game.id}`),
+    description: "Play in HauntHub",
+    category: "Arcade",
+    image: resolveCover(game.cover || ""),
+    url,
+    sourceId: String(game.id),
+    catalog: true
+  };
+}
+
+function getAllGames() {
+  return [...catalogEntries, ...customGames];
+}
+
+function getGameById(id) {
+  return getAllGames().find(game => String(game.id) === String(id));
+}
+
+function setStatus(element, message, type = "") {
+  element.className = `status${type ? " " + type : ""}`;
+  element.textContent = message;
+  element.style.display = "block";
+}
+
+function hideStatus(element) {
+  element.style.display = "none";
+}
+
+function gameCard(game) {
+  const id = escapeHTML(game.id);
+  const title = escapeHTML(game.title);
+  const description = escapeHTML(game.description || "Ready to play");
+  const image = safeExternalUrl(game.image || "");
+
+  return `
+    <article class="game-card">
+      ${
+        image
+          ? `<img class="cover" src="${escapeHTML(image)}"
+               alt="${title}" loading="lazy"
+               referrerpolicy="no-referrer"
+               onerror="this.outerHTML='<div class=&quot;cover-fallback&quot;>🎃</div>'">`
+          : `<div class="cover-fallback">🎃</div>`
+      }
+      <div class="game-info">
+        <h3 class="game-title">${title}</h3>
+        <p class="game-desc">${description}</p>
+        <div class="game-meta">
+          <span class="tag">${escapeHTML(game.category || "Arcade")}</span>
+          <span class="game-id">${game.catalog ? "GN-Math" : "Custom"}</span>
+        </div>
+        <button class="play-btn" data-play="${id}">▶ PLAY GAME</button>
+      </div>
+    </article>
+  `;
+}
+
+function renderRecent() {
+  const grid = $("#recent-grid");
+  const games = getAllGames();
+
+  const preferredNames = [
+    "60 Seconds! Reatomized",
+    "Geometry Dash",
+    "Cuphead",
+    "Baldi's Basics Plus",
+    "Minecraft",
+    "Pizza Tower"
+  ];
+
+  const featured = preferredNames
+    .map(name => games.find(game =>
+      game.title.toLowerCase() === name.toLowerCase()
+    ))
+    .filter(Boolean);
+
+  const shown = [...new Map(
+    [...featured, ...games].map(game => [game.id, game])
+  ).values()].slice(0, 10);
+
+  grid.innerHTML = shown.length
+    ? shown.map(gameCard).join("")
+    : `<div class="empty">Games will appear here once the collection loads.</div>`;
+
+  $("#stat-games").textContent = games.length.toLocaleString();
+  $("#stat-custom").textContent = customGames.length.toLocaleString();
+}
+
+function renderGames() {
+  const grid = $("#games-grid");
+  const query = $("#search").value.trim().toLowerCase();
+  const sort = $("#sort").value;
+
+  let games = getAllGames().filter(game =>
+    game.title.toLowerCase().includes(query)
+  );
+
+  if (sort === "name") {
+    games.sort((a, b) => a.title.localeCompare(b.title));
+  } else if (sort === "name-desc") {
+    games.sort((a, b) => b.title.localeCompare(a.title));
+  } else if (sort === "id") {
+    games.sort((a, b) =>
+      Number(a.sourceId || a.id) - Number(b.sourceId || b.id)
+    );
+  }
+
+  $("#game-count").textContent =
+    `${games.length.toLocaleString()} game${games.length === 1 ? "" : "s"} found`;
+
+  grid.innerHTML = games.length
+    ? games.map(gameCard).join("")
+    : `<div class="empty">No games match that search.</div>`;
+
+  $("#stat-games").textContent = getAllGames().length.toLocaleString();
+  $("#stat-custom").textContent = customGames.length.toLocaleString();
+}
+
+async function loadGNMathGames() {
+  const homeStatus = $("#home-status");
+  const gamesStatus = $("#games-status");
+
+  setStatus(homeStatus, "Loading the GN-Math game database…");
+  setStatus(gamesStatus, "Loading games from the published database…");
+
   try {
-    const response = await fetch(GN_MATH_ZONES);
+    const response = await fetch(GN_MATH_ZONES + "?t=" + Date.now(), {
+      cache: "no-store"
+    });
 
     if (!response.ok) {
-      throw new Error("Could not load the GN-Math game list.");
+      throw new Error(`The game database returned HTTP ${response.status}.`);
     }
 
     const zones = await response.json();
 
-    const games = zones
-      .filter(game => game && game.name && game.url)
-      .map(game => {
-        const url = resolveGnMathUrl(
-          game.url,
-          GN_MATH_HTML
-        );
-
-        const image = resolveGnMathUrl(
-          game.cover || "",
-          GN_MATH_COVERS
-        );
-
-        return {
-          id: `gn-math-${game.id}`,
-          title: game.name,
-          description: `Play ${game.name}`,
-          category: "Arcade",
-          image,
-          url,
-          catalog: true,
-          createdAt: Number(game.id) || Date.now()
-        };
-      })
-      .filter(game => game.url);
-
-    // Avoid adding duplicates if the loader runs again.
-    const existingIds = new Set(
-      catalogEntries.map(game => game.id)
-    );
-
-    for (const game of games) {
-      if (!existingIds.has(game.id)) {
-        catalogEntries.push(game);
-      }
+    if (!Array.isArray(zones)) {
+      throw new Error("The game database did not return a game list.");
     }
 
-    console.log(
-      `HauntHub loaded ${games.length} GN-Math game entries.`
-    );
+    catalogEntries = zones
+      .filter(game => game && game.id !== undefined && game.name)
+      .map(normalizeGame)
+      .filter(Boolean);
 
-    // Refresh the existing HauntHub displays, if available.
-    if (typeof renderGames === "function") {
-      renderGames();
-    }
+    loadingFailed = false;
 
-    if (typeof renderHome === "function") {
-      renderHome();
-    }
+    hideStatus(homeStatus);
+    hideStatus(gamesStatus);
 
-    if (typeof renderRecentGames === "function") {
-      renderRecentGames();
-    }
+    renderGames();
+    renderRecent();
+
+    console.log(`HauntHub loaded ${catalogEntries.length} GN-Math games.`);
   } catch (error) {
-    console.error("GN-Math loading error:", error);
+    console.error("HauntHub game database error:", error);
+    loadingFailed = true;
+
+    setStatus(
+      homeStatus,
+      "The game list could not load. Check your internet connection and refresh the page.",
+      "error"
+    );
+
+    setStatus(
+      gamesStatus,
+      "Could not load the game database. You can retry below or visit GN-Math directly.",
+      "error"
+    );
+
+    $("#games-grid").innerHTML = `
+      <div class="empty">
+        <p>The game database did not load.</p>
+        <button class="btn btn-primary" id="retry-load">Retry loading</button>
+        <p><a href="https://gn-math.dev/" target="_blank" rel="noopener noreferrer">
+          Open GN-Math directly ↗
+        </a></p>
+      </div>`;
+
+    $("#recent-grid").innerHTML = `
+      <div class="empty">
+        <a href="https://gn-math.dev/" target="_blank" rel="noopener noreferrer">
+          Open the GN-Math game collection ↗
+        </a>
+      </div>`;
   }
 }
 
-loadGnMathGames();
+function launchGame(id) {
+  const game = getGameById(id);
+  if (!game) return;
+
+  const url = safeExternalUrl(game.url);
+  if (!url) {
+    alert("This game does not have a valid playable URL.");
+    return;
+  }
+
+  currentGame = game;
+  $("#player-title").textContent = game.title;
+  $("#game-frame").src = url;
+
+  $("#player").classList.add("open");
+  $("#player").setAttribute("aria-hidden", "false");
+  document.body.style.overflow = "hidden";
+}
+
+function closePlayer() {
+  $("#player").classList.remove("open");
+  $("#player").setAttribute("aria-hidden", "true");
+  $("#game-frame").src = "about:blank";
+  document.body.style.overflow = "";
+  currentGame = null;
+}
+
+function openCurrentGameInNewTab() {
+  if (!currentGame) return;
+
+  const url = safeExternalUrl(currentGame.url);
+  if (url) {
+    window.open(url, "_blank", "noopener,noreferrer");
+  }
+}
+
+function showView(name) {
+  document.querySelectorAll(".view").forEach(view => {
+    view.classList.toggle("active", view.id === `view-${name}`);
+  });
+
+  document.querySelectorAll("[data-view]").forEach(button => {
+    button.classList.toggle("active", button.dataset.view === name);
+  });
+
+  if (name === "games") renderGames();
+  if (name === "home") renderRecent();
+  if (name === "media") renderMedia();
+
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function renderMedia() {
+  const grid = $("#media-grid");
+
+  if (!mediaItems.length) {
+    grid.innerHTML = `
+      <div class="empty">
+        <div style="font-size:35px">📺</div>
+        <h3>Your media vault is empty</h3>
+        <p>Add a link to keep it here in this browser.</p>
+        <button class="btn btn-primary" id="empty-add-media">+ Add Media</button>
+      </div>`;
+    return;
+  }
+
+  grid.innerHTML = mediaItems.map((item, index) => {
+    const url = safeExternalUrl(item.url);
+
+    return `
+      <article class="media-card">
+        <div class="eyebrow">Media entry ${index + 1}</div>
+        <h3>${escapeHTML(item.title)}</h3>
+        <p>${escapeHTML(item.description || "Saved link")}</p>
+        ${
+          url
+            ? `<a href="${escapeHTML(url)}" target="_blank"
+                 rel="noopener noreferrer">Open link ↗</a>`
+            : `<p>Invalid link</p>`
+        }
+        <div style="margin-top:15px">
+          <button class="btn btn-secondary" data-remove-media="${index}">
+            Remove
+          </button>
+        </div>
+      </article>`;
+  }).join("");
+}
+
+function showMediaForm() {
+  $("#media-form").style.display = "block";
+  $("#media-title").focus();
+}
+
+function hideMediaForm() {
+  $("#media-form").style.display = "none";
+  $("#add-media-form").reset();
+}
+
+function addCustomGame(event) {
+  event.preventDefault();
+
+  const title = $("#custom-title").value.trim();
+  const url = safeExternalUrl($("#custom-url").value.trim());
+  const image = safeExternalUrl($("#custom-cover").value.trim());
+  const description = $("#custom-description").value.trim();
+
+  if (!title || !url) {
+    $("#add-status").innerHTML =
+      `<div class="status error">Enter a title and a valid HTTP or HTTPS URL.</div>`;
+    return;
+  }
+
+  const game = {
+    id: `custom-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
+    title,
+    url,
+    image,
+    description: description || "Custom game",
+    category: "Custom",
+    catalog: false
+  };
+
+  customGames.unshift(game);
+  writeStorage(STORAGE_GAMES, customGames);
+
+  $("#add-game-form").reset();
+  $("#add-status").innerHTML =
+    `<div class="status success">Added "${escapeHTML(title)}" to HauntHub.</div>`;
+
+  renderGames();
+  renderRecent();
+}
+
+function addMedia(event) {
+  event.preventDefault();
+
+  const title = $("#media-title").value.trim();
+  const url = safeExternalUrl($("#media-url").value.trim());
+  const description = $("#media-description").value.trim();
+
+  if (!title || !url) {
+    alert("Enter a title and a valid HTTP or HTTPS link.");
+    return;
+  }
+
+  mediaItems.unshift({ title, url, description });
+  writeStorage(STORAGE_MEDIA, mediaItems);
+
+  hideMediaForm();
+  renderMedia();
+}
+
+document.querySelectorAll("[data-view]").forEach(button => {
+  button.addEventListener("click", () => {
+    const name = button.dataset.view;
+
+    if (name === "add-media") {
+      showView("media");
+      showMediaForm();
+      return;
+    }
+
+    showView(name);
+  });
+});
+
+document.addEventListener("click", event => {
+  const playButton = event.target.closest("[data-play]");
+  if (playButton) {
+    launchGame(playButton.dataset.play);
+    return;
+  }
+
+  const removeButton = event.target.closest("[data-remove-media]");
+  if (removeButton) {
+    const index = Number(removeButton.dataset.removeMedia);
+    mediaItems.splice(index, 1);
+    writeStorage(STORAGE_MEDIA, mediaItems);
+    renderMedia();
+    return;
+  }
+
+  if (event.target.id === "retry-load") {
+    loadGNMathGames();
+    return;
+  }
+
+  if (event.target.id === "empty-add-media") {
+    showMediaForm();
+  }
+});
+
+$("#search").addEventListener("input", renderGames);
+$("#sort").addEventListener("change", renderGames);
+
+$("#player-close").addEventListener("click", closePlayer);
+$("#player-back").addEventListener("click", closePlayer);
+$("#player-newtab").addEventListener("click", openCurrentGameInNewTab);
+
+$("#cancel-media").addEventListener("click", hideMediaForm);
+$("#add-media-form").addEventListener("submit", addMedia);
+$("#add-game-form").addEventListener("submit", addCustomGame);
+
+document.addEventListener("keydown", event => {
+  if (event.key === "Escape" && $("#player").classList.contains("open")) {
+    closePlayer();
+  }
+});
+
+// Decorative floating embers
+const emberContainer = $("#embers");
+
+for (let i = 0; i < 18; i++) {
+  const ember = document.createElement("span");
+  ember.className = "ember";
+  ember.style.left = `${Math.random() * 100}%`;
+  ember.style.animationDelay = `${Math.random() * 10}s`;
+  ember.style.animationDuration = `${7 + Math.random() * 10}s`;
+  ember.style.opacity = `${0.15 + Math.random() * 0.35}`;
+  emberContainer.appendChild(ember);
+}
+
+renderMedia();
+renderGames();
+renderRecent();
+loadGNMathGames();
+</script>
+</body>
+</html>
