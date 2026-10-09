@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#090909">
+  <title>HauntHub | Safe Web Reader</title>
+  <style>
+    :root{color-scheme:dark;--bg:#080808;--panel:#111;--panel2:#171717;--line:#292929;--orange:#ff7a18;--muted:#a7a7a7;--text:#f6f6f6}
+    *{box-sizing:border-box}
+    body{margin:0;background:radial-gradient(ellipse at 50% -20%,#49200d 0,transparent 45%),var(--bg);color:var(--text);font:16px/1.5 Inter,Segoe UI,Arial,sans-serif;min-height:100vh}
+    body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.15;background-image:radial-gradient(#ff8a33 1px,transparent 1px);background-size:37px 37px;animation:drift 24s linear infinite}
+    @keyframes drift{to{background-position:148px 185px}}
+    header{position:sticky;top:0;z-index:2;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:16px clamp(16px,5vw,64px);background:#090909eF;border-bottom:1px solid #292929;backdrop-filter:blur(12px)}
+    .brand{display:flex;align-items:center;gap:11px;font-weight:900;letter-spacing:.3px;font-size:1.25rem}
+    .pumpkin{display:grid;place-items:center;width:40px;height:40px;border-radius:12px;background:linear-gradient(145deg,#ff9b3d,#df4b00);box-shadow:0 0 28px #ff721833;font-size:23px}
+    .tag{font-size:.78rem;color:#ffb777;border:1px solid #683819;padding:5px 10px;border-radius:999px}
+    main{width:min(1000px,92vw);margin:56px auto 40px;position:relative}
+    .eyebrow{color:var(--orange);text-transform:uppercase;letter-spacing:3px;font-size:.75rem;font-weight:800}
+    h1{font-size:clamp(2.3rem,7vw,4.8rem);line-height:1.02;letter-spacing:-2px;margin:12px 0}
+    h1 span{color:var(--orange);text-shadow:0 0 28px #ff741c35}
+    .intro{max-width:660px;color:#b8b8b8;font-size:1.05rem}
+    .search-card{margin-top:30px;padding:18px;background:linear-gradient(135deg,#171717,#0e0e0e);border:1px solid #343434;border-radius:20px;box-shadow:0 18px 70px #0008}
+    label{display:block;font-size:.86rem;color:#d2d2d2;margin:0 0 9px}
+    .searchrow{display:flex;gap:10px}
+    input{flex:1;min-width:0;padding:16px;border-radius:12px;border:1px solid #383838;background:#080808;color:white;font:inherit;outline:none}
+    input:focus{border-color:var(--orange);box-shadow:0 0 0 3px #ff7a1820}
+    button{border:0;border-radius:12px;padding:0 22px;background:var(--orange);color:#170b03;font-weight:900;font-size:.96rem;cursor:pointer;transition:transform .15s,filter .15s}
+    button:hover{filter:brightness(1.1);transform:translateY(-1px)}button:disabled{opacity:.6;cursor:wait;transform:none}
+    .hint{font-size:.8rem;color:#969696;margin:10px 2px 0}
+    .chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px}
+    .chip{font-size:.8rem;color:#ccc;border:1px solid #343434;background:#111;padding:6px 10px;border-radius:999px}
+    .notice{margin-top:20px;border-left:3px solid var(--orange);padding:12px 15px;background:#ff7a180c;color:#c4c4c4;font-size:.88rem}
+    #status{margin:22px 0 0;color:#ffb777}
+    #result{display:none;margin-top:20px;border:1px solid #333;border-radius:18px;background:#101010;overflow:hidden}
+    .resulthead{padding:20px;border-bottom:1px solid #292929;background:#151515}
+    .resulthead h2{margin:0 0 6px;overflow-wrap:anywhere}
+    .resulthead p{margin:0;color:#aaa;overflow-wrap:anywhere;font-size:.86rem}
+    #pagecontent{padding:22px;overflow-wrap:anywhere;line-height:1.7;color:#ddd}
+    #pagecontent h1,#pagecontent h2,#pagecontent h3{font-size:1.25rem;letter-spacing:0;margin:1.2em 0 .4em}
+    #pagecontent p{margin:.65em 0}#pagecontent ul,#pagecontent ol{padding-left:25px}
+    #pagecontent img{max-width:100%}#pagecontent table{max-width:100%;border-collapse:collapse}#pagecontent td,#pagecontent th{border:1px solid #444;padding:6px}
+    footer{text-align:center;padding:24px;color:#777;border-top:1px solid #222;font-size:.8rem}
+    @media(max-width:620px){header{padding:12px 4vw}main{margin-top:38px}.searchrow{flex-direction:column}button{padding:14px}h1{letter-spacing:-1px}.tag{display:none}}
+  </style>
+</head>
+<body>
+<header>
+  <div class="brand"><div class="pumpkin" aria-hidden="true">🎃</div><span>HauntHub</span></div>
+  <span class="tag">SAFE WEB READER</span>
+</header>
+<main>
+  <div class="eyebrow">A safer way to explore</div>
+  <h1>Your web.<br><span>Your rules.</span></h1>
+  <p class="intro">A dark, arcade-inspired reader for websites your server administrator has approved. No scripts or embedded media from the destination are run here.</p>
+
+  <section class="search-card">
+    <form id="readerForm">
+      <label for="url">Website URL</label>
+      <div class="searchrow">
+        <input id="url" type="url" placeholder="https://example.com" autocomplete="url" required maxlength="2048">
+        <button id="go" type="submit">OPEN PAGE ↗</button>
+      </div>
+      <p class="hint">HTTPS only · Approved domains only · Read-only text view</p>
+    </form>
+    <div class="chips"><span class="chip">🛡️ Domain allowlist</span><span class="chip">⚡ Rate limited</span><span class="chip">🚫 No scripts</span></div>
+  </section>
+
+  <div class="notice"><strong>How it works:</strong> the server fetches pages only from domains configured by its owner. It displays a simplified text view; it does not bypass logins, school/work restrictions, paywalls, or website security controls.</div>
+  <div id="status" role="status" aria-live="polite"></div>
+  <section id="result" aria-live="polite">
+    <div class="resulthead"><h2 id="pagetitle"></h2><p id="pagesource"></p><p id="pagedesc"></p></div>
+    <article id="pagecontent"></article>
+  </section>
+</main>
+<footer>HauntHub Safe Reader · Use responsibly and only with permission.</footer>
+<script>
+const form = document.getElementById("readerForm");
+const urlInput = document.getElementById("url");
+const go = document.getElementById("go");
+const statusBox = document.getElementById("status");
+const result = document.getElementById("result");
+
+form.addEventListener("submit", async event => {
+  event.preventDefault();
+  result.style.display = "none";
+  statusBox.textContent = "Checking the permitted site and loading the page…";
+  go.disabled = true;
+  try {
+    const response = await fetch("/api/read?url=" + encodeURIComponent(urlInput.value.trim()));
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.error || "Could not load that page.");
+    document.getElementById("pagetitle").textContent = data.title;
+    document.getElementById("pagesource").textContent = data.source;
+    document.getElementById("pagedesc").textContent = data.description;
+    // Only server-sanitized HTML is returned; still isolate the display in a sandbox.
+    const frame = document.createElement("iframe");
+    frame.setAttribute("sandbox", "");
+    frame.title = "Simplified website content";
+    frame.style.cssText = "width:100%;min-height:500px;border:0;background:#101010";
+    frame.srcdoc = "<!doctype html><meta charset=utf-8><meta name=viewport content='width=device-width,initial-scale=1'><style>body{font:16px/1.7 system-ui,sans-serif;color:#ddd;background:#101010;padding:18px;overflow-wrap:anywhere}a{color:#ff9b52}img{max-width:100%}table{border-collapse:collapse}td,th{border:1px solid #444;padding:6px}</style>" + data.textHtml;
+    const pageContent = document.getElementById("pagecontent");
+    pageContent.replaceChildren(frame);
+    result.style.display = "block";
+    statusBox.textContent = "Page loaded in simplified reader mode.";
+    result.scrollIntoView({behavior:"smooth",block:"start"});
+  } catch (error) {
+    statusBox.textContent = error.message;
+  } finally {
+    go.disabled = false;
+  }
+});
+</script>
+</body>
+</html>
