@@ -45,10 +45,27 @@ function renderLetters(){
  $('letters').replaceChildren();
  letters.forEach(letter=>{const b=document.createElement('button');b.textContent=letter;b.className=(activeLetter===letter||(activeLetter===''&&letter==='All'))?'active':'';b.onclick=()=>{activeLetter=letter==='All'?'':letter;render()};$('letters').append(b)});
 }
-function coverLookup(){
- // GN-Math has real cover art for overlapping IDs; only use a cover when the filename maps plausibly.
- const bases=['https://cdn.jsdelivr.net/gh/gn-math/covers@main/','https://cdn.jsdelivr.net/gh/freebuisness/covers@main/'];
- return bases;
+const COVER_BASES=[
+ {zones:'https://cdn.jsdelivr.net/gh/gn-math/assets@main/zones.json',covers:'https://cdn.jsdelivr.net/gh/gn-math/covers@main'},
+ {zones:'https://cdn.jsdelivr.net/gh/freebuisness/assets@latest/zones.json',covers:'https://cdn.jsdelivr.net/gh/freebuisness/covers@main'}
+];
+function normTitle(s){return String(s||'').toLowerCase().replace(/^cl/,'').replace(/[^a-z0-9]/g,'')}
+const realCoverMapPromise=Promise.all(COVER_BASES.map(async source=>{
+ try{
+  const res=await fetch(source.zones);
+  if(!res.ok)throw new Error('cover metadata unavailable');
+  const rows=await res.json(), map=new Map();
+  rows.forEach(item=>{
+   if(!item||!item.name||!item.cover)return;
+   let cover=String(item.cover).replaceAll('{COVER_URL}',source.covers).replaceAll('{HTML_URL}','https://cdn.jsdelivr.net/gh/gn-math/html@main');
+   if(!/^https?:\/\//i.test(cover))cover=source.covers+'/'+cover.replace(/^\//,'');
+   map.set(normTitle(item.name),cover);
+  });
+  return map;
+ }catch{return new Map()}
+})).then(maps=>{const merged=new Map();maps.forEach(m=>m.forEach((v,k)=>{if(!merged.has(k))merged.set(k,v)}));return merged}).catch(()=>new Map());
+function realCoverFor(game){
+ return realCoverMapPromise.then(map=>map.get(normTitle(game.name))||null);
 }
 function render(){
  const query=$('search').value.trim().toLowerCase(), sort=$('sort').value;
@@ -67,11 +84,10 @@ function render(){
   items.forEach(g=>{
    const card=document.createElement('article');card.className='game';card.tabIndex=0;
    const c=document.createElement('div');c.className='cover';const img=document.createElement('img');img.alt=g.name+' cover';img.loading='lazy';img.src=fallbackCover(g.name,g.id);
-   // Try a title-based real-cover candidate from the public GN-Math cover repository; fallback remains if it doesn't exist.
-   const candidates=coverLookup().map(base=>base+encodeURIComponent(g.id.replace(/^cl/i,'').toLowerCase())+'.png');
-   let candidate=0;function tryCandidate(){if(candidate>=candidates.length)return;img.src=candidates[candidate++];}
-   img.onerror=()=>{if(candidate<candidates.length)tryCandidate();else{img.onerror=null;img.src=fallbackCover(g.name,g.id)}};
-   tryCandidate();c.append(img);
+   // Use an actual cover URL from catalog metadata when the title matches; otherwise keep the generated fallback.
+   img.onerror=()=>{img.onerror=null;img.src=fallbackCover(g.name,g.id)};
+   realCoverFor(g).then(url=>{if(url){img.src=url;img.dataset.coverSource='catalog'}});
+   c.append(img);
    const t=document.createElement('div');t.className='title';t.textContent=g.name;
    const sub=document.createElement('div');sub.className='sub';sub.textContent='↗ Open game in new tab';t.append(sub);
    card.append(c,t);card.onclick=()=>launch(g);card.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();launch(g)}};
@@ -79,7 +95,7 @@ function render(){
   });
   section.append(grid);$('results').append(section);
  }
- $('status').textContent='Catalog ready. Some older files or covers may be missing.';
+ $('status').textContent='Catalog ready. Real catalog covers are used when a matching title exists; other games show fallback artwork.';
 }
 function launch(g){
  const url='https://cdn.skypack.dev/ugs-singlefiles@1.0.5/UGS-Files/'+encodeURIComponent(g.id+'.html');
