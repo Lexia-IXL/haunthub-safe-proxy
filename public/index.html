@@ -69,7 +69,7 @@ dialog::backdrop{background:#000d;backdrop-filter:blur(5px)}
     <div class="brand">🎃 Haunt<span>Hub</span></div>
     <nav>
       <button onclick="showHome()">Home</button>
-      <button onclick="scrollToGames()">Games</button>
+      <button onclick="window.location.href='games.html'">Games</button>
       <button onclick="toggleAdd()">＋ Add Game</button>
     </nav>
     <div class="nav-spacer"></div>
@@ -81,8 +81,8 @@ dialog::backdrop{background:#000d;backdrop-filter:blur(5px)}
   <section class="hero" id="home">
     <div class="eyebrow">Your spooky arcade</div>
     <h1>Welcome to HauntHub</h1>
-    <p>Find your next favorite game, explore the arcade, and jump straight into the action.</p>
-    <button class="primary" onclick="scrollToGames()">Explore Games ↓</button>
+    <p>Find your next favorite game, explore the arcade, and jump straight into the action. Open the Games page to browse the full UGS collection.</p>
+    <button class="primary" onclick="window.location.href='games.html'">Explore Games ↓</button>
   </section>
 
   <div id="status" class="status">Connecting to the arcade game catalog…</div>
