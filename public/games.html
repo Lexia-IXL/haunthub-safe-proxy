@@ -383,13 +383,13 @@ const cmp = (a, b) => a.name.localeCompare(b.name, undefined, { numeric: true, s
 const letterOf = n => { const c = (n.trim()[0] || "#").toUpperCase(); return /[A-Z]/.test(c) ? c : "#"; };
 
 /* ---- automatic cover search (Wikipedia) for games the catalogs don't have ---- */
-const WIKI_KEY = "haunthub_wiki_covers_v1";
+const WIKI_KEY = "haunthub_wiki_covers_v2";
 let wikiCache = {};
 try { wikiCache = JSON.parse(localStorage.getItem(WIKI_KEY) || "{}") || {}; } catch { wikiCache = {}; }
 function saveWiki() { try { localStorage.setItem(WIKI_KEY, JSON.stringify(wikiCache)); } catch {} }
 const wikiQueue = []; let wikiActive = 0;
 
-async function wikiFind(game) {
+async function wikiOnly(game) {
   const gk = simplify(game.name);
   if (!gk || gk.length < 4) return "";
   const url = "https://en.wikipedia.org/w/api.php?action=query&format=json&origin=*&generator=search&gsrlimit=4" +
@@ -405,6 +405,31 @@ async function wikiFind(game) {
     if (tk === gk || (sh.length >= 5 && lg.includes(sh) && sh.length / lg.length >= 0.75)) return pg.thumbnail.source;
   }
   return "";
+}
+
+function titleMatches(title, gk) {
+  const tk = simplify(String(title).split(/\s[-–:|]\s|:/)[0].replace(/\(.*?\)/g, ""));
+  if (!tk || digitsOf(tk) !== digitsOf(gk)) return false;
+  const [sh, lg] = tk.length <= gk.length ? [tk, gk] : [gk, tk];
+  return tk === gk || (sh.length >= 5 && lg.includes(sh) && sh.length / lg.length >= 0.75);
+}
+
+/* second source: Apple's store search (has cover art for a huge number of games) */
+async function itunesFind(game) {
+  const gk = simplify(game.name);
+  if (!gk || gk.length < 4) return "";
+  const j = await fetchJson("https://itunes.apple.com/search?media=software&limit=6&term=" + encodeURIComponent(game.name), 10000);
+  for (const r of (j.results || [])) {
+    if (r.artworkUrl512 && titleMatches(r.trackName, gk)) return r.artworkUrl512;
+  }
+  return "";
+}
+
+async function wikiFind(game) {
+  let url = "";
+  try { url = await wikiOnly(game); } catch (e) { /* try the next source */ }
+  if (url) return url;
+  return await itunesFind(game);   // throws on network failure so the result isn't cached
 }
 
 function setCoverImage(el, url) {
