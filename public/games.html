@@ -1,111 +1,544 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Games • HauntHub 🎃</title>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Games · HauntHub 🎃</title>
 <style>
-:root{--bg:#100c0b;--panel:#1c1412;--orange:#ff7a18;--gold:#ffbd69;--text:#fff4e9;--muted:#b9a69b;--border:#493026}
-*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at top,#35190e 0%,var(--bg) 52%);color:var(--text);font-family:Arial,Helvetica,sans-serif;min-height:100vh}
+:root {
+  --bg:#100c0b; --panel:#1c1412; --panel2:#271a16;
+  --orange:#ff7a18; --gold:#ffbd69; --text:#fff4e9;
+  --muted:#b9a69b; --border:#493026; --red:#ff5757;
+}
+*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(ellipse at top,#35190e 0%,var(--bg) 52%);color:var(--text);font-family:Arial,Helvetica,sans-serif;min-height:100vh}
 header{position:sticky;top:0;z-index:5;background:#120d0df2;border-bottom:1px solid var(--border);backdrop-filter:blur(12px)}
-.nav{max-width:1400px;margin:auto;padding:15px 22px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}.brand{font-size:25px;font-weight:900;color:var(--orange);white-space:nowrap}.brand span{color:#fff}
-button,.navlink{font:inherit;cursor:pointer;border:1px solid var(--border);background:#241814;color:var(--text);border-radius:10px;padding:10px 14px}button:hover,.navlink:hover{border-color:var(--orange);color:var(--gold)}
-main{max-width:1400px;margin:auto;padding:24px 22px 70px}.hero{padding:25px 28px;border:1px solid #65371f;border-radius:20px;background:linear-gradient(120deg,#3b1b0d,#21120f 65%,#31170c);margin-bottom:22px}
-h1{font-size:clamp(28px,4vw,44px);margin:8px 0}.eyebrow{color:var(--gold);font-size:12px;letter-spacing:2px;text-transform:uppercase;font-weight:bold}.hero p{color:#d9b9a4;line-height:1.6}
-.toolbar{display:flex;gap:10px;flex-wrap:wrap;margin:18px 0}input,select{background:#1a1210;color:var(--text);border:1px solid var(--border);border-radius:10px;padding:12px;font:inherit;min-width:0}#search{flex:1;min-width:200px}
-.letters{display:flex;flex-wrap:wrap;gap:6px;margin:14px 0}.letters button{padding:6px 10px;border-radius:8px}.letters button.active{background:var(--orange);color:#190d07}
-.status{margin:12px 0;color:var(--gold);font-size:14px}.section{margin-top:24px}.section h2{font-size:21px;border-bottom:1px solid var(--border);padding-bottom:9px}.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:12px}
-.game{background:var(--panel);border:1px solid var(--border);border-radius:13px;overflow:hidden;cursor:pointer;min-width:0;transition:transform .15s,border-color .15s}.game:hover{transform:translateY(-3px);border-color:var(--orange)}
-.cover{aspect-ratio:4/3;background:#201410;overflow:hidden;display:flex;align-items:center;justify-content:center}.cover img{width:100%;height:100%;object-fit:cover;display:block}.title{padding:10px 10px 12px;font-weight:bold;font-size:13px;line-height:1.35;overflow-wrap:anywhere;min-height:52px}.sub{font-size:11px;color:var(--muted);font-weight:normal;margin-top:5px}
-footer{text-align:center;padding:25px;color:#816e62;font-size:13px}
-@media(max-width:600px){.nav{padding:12px}main{padding:15px 12px 45px}.hero{padding:20px 16px}.grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
-</style></head><body>
-<header><div class="nav"><div class="brand">🎃 Haunt<span>Hub</span></div><button onclick="location.href='index.html'">← Home</button><strong style="color:var(--gold)">Games</strong><span style="flex:1"></span><span id="count">Loading…</span></div></header>
-<main><section class="hero"><div class="eyebrow">The spooky arcade</div><h1>All Games</h1><p>Browse the full UGS collection. Game names are cleaned up for display; the original IDs are kept for launching. Some older games may no longer be available.</p></section>
-<div class="toolbar"><input id="search" placeholder="Search every game…" autocomplete="off"><select id="sort"><option value="az">Name: A–Z</option><option value="za">Name: Z–A</option></select></div>
-<div id="letters" class="letters"></div><div id="status" class="status">Loading game catalog…</div><div id="results"></div></main><footer>HauntHub • Halloween vibes all year long 🎃</footer>
+.nav{max-width:1400px;margin:auto;padding:15px 22px;display:flex;align-items:center;gap:20px;flex-wrap:wrap}
+.brand{font-size:25px;font-weight:900;color:var(--orange);white-space:nowrap}
+.brand span{color:#fff}
+nav{display:flex;gap:8px;flex-wrap:wrap}
+button,.navlink{font:inherit;cursor:pointer;border:1px solid var(--border);background:#241814;color:var(--text);border-radius:10px;padding:10px 14px}
+button:hover,.navlink:hover{border-color:var(--orange);color:var(--gold)}
+button.primary{background:var(--orange);border-color:var(--orange);color:#190d07;font-weight:bold}
+button:disabled{opacity:.5;cursor:not-allowed}
+.nav-spacer{flex:1}
+main{max-width:1400px;margin:auto;padding:26px 22px 70px}
+.hero{padding:30px;border:1px solid #65371f;border-radius:22px;background:linear-gradient(120deg,#3b1b0d,#21120f 65%,#31170c);position:relative;overflow:hidden}
+.hero:after{content:"🎃";position:absolute;right:35px;top:18px;font-size:84px;opacity:.18;transform:rotate(12deg)}
+.eyebrow{color:var(--gold);font-weight:bold;text-transform:uppercase;letter-spacing:2px;font-size:12px}
+h1{font-size:clamp(30px,5vw,50px);margin:12px 0;color:#fff}
+.hero p{color:#d9b9a4;max-width:650px;line-height:1.6;margin:0}
+.status{margin:18px 0;padding:12px 15px;border-radius:10px;background:#201713;border:1px solid var(--border);color:var(--muted);font-size:14px;line-height:1.5}
+.status.error{color:#ffc1b9;border-color:#803c30}
+.status.good{color:#baf2c0;border-color:#315e37}
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;margin:20px 0 12px}
+input,select,textarea{background:#1a1210;color:var(--text);border:1px solid var(--border);border-radius:10px;padding:12px;font:inherit;min-width:0}
+input:focus,select:focus,textarea:focus{outline:2px solid #a84e1a}
+#search{flex:1;min-width:200px}
+.az{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 6px;position:sticky;top:74px;z-index:4;background:#120d0de6;padding:8px 0;backdrop-filter:blur(8px)}
+.az button{padding:6px 10px;min-width:34px;font-weight:bold;font-size:14px}
+.az button.off{opacity:.3;cursor:default;pointer-events:none}
+.sectionhead{display:flex;justify-content:space-between;align-items:center;gap:15px;flex-wrap:wrap;margin:26px 0 15px}
+h2{font-size:24px;margin:0}
+#count{color:var(--muted);font-size:14px}
+.letter{font-size:28px;font-weight:900;color:var(--orange);margin:28px 0 12px;padding-bottom:8px;border-bottom:1px solid var(--border);scroll-margin-top:130px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(175px,1fr));gap:16px}
+.game{min-width:0;background:var(--panel);border:1px solid var(--border);border-radius:15px;overflow:hidden;transition:transform .16s,border-color .16s;cursor:pointer}
+.game:hover{transform:translateY(-4px);border-color:var(--orange)}
+.cover{width:100%;aspect-ratio:4/3;background:linear-gradient(135deg,#43200f,#1a1110);display:flex;align-items:center;justify-content:center;overflow:hidden;color:var(--gold);font-size:44px}
+.cover img{width:100%;height:100%;object-fit:cover;display:block}
+.ginfo{padding:12px}
+.gtitle{font-weight:bold;line-height:1.35;overflow-wrap:anywhere}
+.gtag{font-size:12px;color:var(--muted);margin-top:7px}
+.playbtn{width:100%;margin-top:10px;padding:9px;background:#342016;border-color:#6a3a20}
+.empty{padding:40px 15px;text-align:center;color:var(--muted);border:1px dashed var(--border);border-radius:15px;grid-column:1/-1}
+footer{color:#816e62;text-align:center;padding:24px;font-size:13px}
+.panel{display:none;margin-top:20px;padding:20px;background:var(--panel);border:1px solid var(--border);border-radius:15px}
+.panel.show{display:block}
+.formgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin:14px 0}
+.formgrid input{width:100%}
+.small{color:var(--muted);font-size:13px;line-height:1.5}
+@media(max-width:600px){.nav{padding:12px}.hero{padding:24px 18px}.hero:after{right:12px;font-size:65px}.grid{grid-template-columns:repeat(2,minmax(0,1fr))}main{padding:18px 12px 45px}.az{top:112px}}
+</style>
+</head>
+<body>
+<header>
+  <div class="nav">
+    <div class="brand">🎃 Haunt<span>Hub</span></div>
+    <nav>
+      <button onclick="window.location.href='index.html'">Home</button>
+      <button onclick="window.location.href='games.html'">Games</button>
+    </nav>
+    <div class="nav-spacer"></div>
+    <button id="missingBtn" onclick="showMissing()" title="List games that have no cover image">🖼 Missing covers</button>
+    <button id="refreshBtn" onclick="loadGames(true)">↻ Refresh Games</button>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="eyebrow">Ultimate Game Stash</div>
+    <h1>🕹️ The Arcade</h1>
+    <p>The full UGS collection, sorted A–Z. Pick a game and it launches in a new tab.</p>
+  </section>
+
+  <div id="status" class="status">Loading the UGS game list…</div>
+
+  <section id="missingPanel" class="panel">
+    <h2>Games without a cover</h2>
+    <p class="small" id="missingInfo"></p>
+    <textarea id="missingText" rows="8" style="width:100%" readonly></textarea>
+  </section>
+
+  <section id="gamesSection">
+    <div class="sectionhead">
+      <h2>All Games</h2>
+      <span id="count">Loading games…</span>
+    </div>
+    <div class="toolbar">
+      <input id="search" placeholder="Search games…" autocomplete="off">
+      <select id="sort">
+        <option value="az">Name: A–Z</option>
+        <option value="za">Name: Z–A</option>
+      </select>
+    </div>
+    <div class="az" id="azbar"></div>
+    <div id="gameGrid"><div class="empty">🎃 Waking up the arcade…</div></div>
+  </section>
+</main>
+
+<footer>HauntHub • Halloween vibes all year long 🎃</footer>
+
 <script>
-const IDS=["cl1", "cl100RoomsOfEnemies", "cl10bullets", "cl10minutestildawn", "cl10morebullets", "cl12minibattles", "cl13bones", "cl1on1soccer", "cl1v1lol", "cl1v1tennis", "cl2048", "cl2048cupcakes", "cl20smallmazes", "cl234playergame", "cl2doom", "cl2Dshooting", "cl3dash", "cl3dasheditor", "cl3dpinballspacecadet", "cl3pandas", "cl3pandasbrazil", "cl3pandasfantasy", "cl3pandasjapan", "cl3pandasnight", "cl3slices2", "cl40xescape", "cl4thandgoal", "cl500calibercontractz", "cl60secondsburgerrun", "cl60secondssantarun", "cl64in1nes", "cl8ballclassic", "cl8ballpool", "cl9007199254740992", "cl90in1nes", "cl99balls", "cl99nightsitf", "clA Walk in The Forest (v10)", "clabandoned3", "clabsolutemadness", "clacecombat2", "clacecombat3", "clacegangstertaxi", "clachievementunlocked", "clachievmentunlocked", "clachievmentunlocked2", "clachievmentunlocked3", "clachillies", "clachillies2", "clAcko_s Mach Bike Challenge (v10)", "clADarkRoom", "cladatewithdeath", "cladayintheoffice", "clADOFAI", "cladvancewars", "cladvancewars2", "cladvancewarsdualstrike", "cladventneon", "clAdventureCapatalist", "cladventurecapitalist", "claflac", "claftertheweek", "clagariolite", "clageofwar", "clageofwar2", "clagesofconflict", "clagesofempire", "clahoysurvival", "clai", "clairlinetycoonidle", "clakoopasrevenge", "clakoopasrevenge2", "clakumanorgaiden", "claladdinsnes", "clalexkiddinmiracleworld", "clalienhominid", "clalienhominidgba", "clalienskyinvasion", "clalientransporter", "clalienvspredator", "clallbossesin1", "clallocation", "clAltered Beast", "clamaze", "clambulencearush", "clamidstthesky", "clamigopancho", "clamigopancho2", "clamigopancho3", "clamigopancho4", "clamigopancho5", "clamigopancho6", "clamigopancho7", "clamongus", "clamorphous", "clancientsins", "clanemonesfall", "clangry-birdsspace", "clangrybirds-space", "clangrybirds", "clangrybirdsshowdown", "clangrybirdsspace", "clanimalcrossingwildworld", "clanimalforestn64", "clannsmb", "clanotherworld", "clantarttycoon", "clantimatterdimensions", "clapesvshelium", "clapotris", "clappleshooter", "clappleworm", "claquaparkio", "clarceuslegend", "clarcheryworldtour", "clarchesspelago", "clarena", "clarmormayhem2", "clarsonate", "clarthursnightmare", "clascent", "clasdutydemands", "clasmallworldcup", "classesmentexaminationque", "classessmentexamination", "clasteroids", "clasteroidsALT", "clasteroidsarcade", "clAstrosDreamland", "clastynax", "clatariadventure", "clattackhole", "clavalanche", "claviamasters", "claviamastersbuggy", "clAwesomePirates", "clawesomeplanes", "clawesometanks", "clawesometanks2", "claxbattler", "claxisfootballleague", "clB3313", "clb3313unabandonedA2", "clb3313v102", "clbabeltower", "clbabychiccoadventure", "clbabykaizo", "clbabysniperinvietnam", "clbackrooms", "clbackrooms2D", "clbackyardbaseball", "clbackyardbaseball09", "clbackyardbaseball10", "clbackyardfootball", "clbackyardsoccer", "clbaconmaydie", "clbadbodyguards", "clbadicecream", "clbadicecream2", "clbadicecream3", "clbadmondaysimulator", "clbadparenting", "clbadpiggies", "clbadpiggieslatest", "clbadtimesim", "clbadtimesimulator", "clbalatrogba", "clbaldicaseoh", "clbaldidecomp", "clbaldiepstein", "clbaldisbasics", "clbaldisbasicsremaster", "clbaldisfunnewschoolultimate", "clballblast", "clballistic", "clballsandbricks", "clballsandbricksgood", "clballz", "clbananasimulator", "clbanbuds", "clbanditgunslingers", "clbanjokazooie", "clbanjotooie", "clBank Robbery", "clbankbreakout2", "clbankrobbery2", "clbarryhasasecret", "clbartblast", "clbas", "clbaseballbros", "clbasketballfrvr", "clbasketballlegends(1)", "clbasketballlegends", "clbasketballstars", "clbasketballsuperstars", "clbasketbattle", "clbasketbros", "clbasketrandom", "clbasketrandomgood", "clbasketslamdunk2", "clbatterup", "clbattlekarts", "clbattles", "clbattlesim", "clbattlezone", "clbazookaboy", "clbballlegend", "clbeachboxingsim", "clbeamrider", "clbearbarians", "clbearsus", "clbejeweledtwistds", "clbejeweledtwistflash", "clben10alienforce", "clben10omniverse", "clben10protector", "clben10racing", "clben10ultimatealien", "clbendrowned", "clbergentruck201x", "clbfdia5b", "clBFDIBranches", "clbigflappytowertinysquare", "clbigicetowertinysquare", "clbigneontowertinysquare", "clbigshotboxing2", "clbigtowertinysquare", "clbigtowertinysquare2", "clbigtowertinysquare2good", "clBig_Time_Butter_Baron", "clbindingofisaccsheeptime", "clbioevil4", "clbitlife", "clbitlifeencrypted", "clbitplanes", "clblackjack", "clblackjackbattle", "clblackjackhhhh", "clblackknight", "clblackout", "clblacksmithlab", "clblastronaut", "clblazedrifter", "clbleachvsnaruto", "clblightborne", "clblobsstory2", "clblockblast", "clblockblastv2", "clblockcraftparkour", "clblockcraftshooter", "clblockpost", "clblockthepig", "clblockydemolitionderby", "clblockysnakes", "clblood", "clbloodmoney", "clbloodtournament", "clbloons", "clbloons2", "clbloonspp1", "clbloonspp2", "clbloonspp3", "clbloonspp4", "clbloonspp5", "clbloonsTD1", "clbloonsTD2", "clbloonsTD3", "clbloonsTD4", "clbloonsTD5", "clbloonsTD6scratch", "clbloxorz", "clblumgiracers", "clblumgirocket", "clBMX2", "clbntts", "clbobasimulator", "clbobtherobber", "clbobtherobber2", "clbobtherobber5", "clbollybeat", "clbomberman", "clbomberman2", "clbombermanhero", "clbombermanworld", "clBonanza-Bros", "clbonkerssnes", "clboomslingers", "clbottlecracks", "clbottleflip3d", "clbotwds", "clbounceback", "clbouncemasters", "clbouncybasketball", "clbouncymotors", "clBountyOfOne", "clbowlalt", "clbowmaster", "clboxhead2playrooms", "clboxheadnightmare", "clboxinglive-2", "clboxinglive2", "clboxingrandom", "clbrainrot", "clbrawlsimulator3d", "clBrawlstars", "clbreadskate", "clbridgerace", "clbrotato", "clBTD1", "clbtd5", "clbtts", "clbtts2", "clbubbleshooter", "clbubbleshooterpirate", "clbubbletanks", "clbubbletanks2", "clbubbletanks3", "clbubbletanksarenas", "clbubbletankstd", "clbubsy", "clbuckshotroulette", "clbuildnowgg", "clbulletforce", "clbunnyland", "clbunzobunny", "clburgerandfrights", "clburgertime", "clburritobison", "clburritobison2", "clburritobisonlaunchalibre", "clburritobisonrevenge", "clbushidoblade", "clBusterJam", "clcactusmccoy(1)", "clcactusmccoy", "clcactusmccoy2(1)", "clcactusmccoy2(2)", "clcactusmccoy2", "clcallofbattle", "clcamilla", "clcandybox1", "clcannonballs3d", "clcannonfodder", "clcaptainlang", "clcaptchaware", "clcapybaraclicker", "clcarcrash3", "clcardrawing", "clcareatscar2deluxe", "clcarkingarena", "clcarmods", "clcarrampvspolicechase", "clcarstuntsdriving", "clCartoonNetworkTableTennisUltimateTournament", "clcastaway", "clcastlebloodline", "clcastlecircleofmoon", "clcastlevania", "clcastlevania2", "clcastlevania3", "clcastlevaniaariaofsorrow", "clcastlevaniadawnofsorrow", "clcastlevanianes", "clcastlewarsmodern", "clcatmario", "clcatmariogood", "clcatslovecake2", "clcavecrawler", "clcavestory", "clceleste", "clceleste2", "clcelestemariodx", "clCeliasStupidROMHack", "clcellardoor", "clCellToSingularity", "clcentipedearcade", "clchainofmemories", "clchaosfaction2", "clcheckers", "clcheesechompers3d", "clcheeseisthereason", "clcheeserolling", "clcheshireinachatroom", "clchess", "clchessclassic", "clchibiknight", "clChickenCS", "clchickenscream", "clchickenwar", "clchipschallenge", "clchoppyorc", "clchoroqwonderful", "clchronotrigger", "clchuzzle", "clCircloO2", "clciviballs", "clciviballs2", "clclashnslash", "clclashofvikings", "clclassof09", "clclaymore", "clclayuncraft", "clcleanupio", "clclearvision", "clclearvision2", "clclearvision3", "clclearvision4", "clclearvision5", "clclimbforbrainrots", "clclmadnessambulation", "clclover", "clclubbytheseal", "clclusterrush", "clcoalllcdemo", "clcod4", "clcodblackopp", "clcoddefiance", "clcodenamegordon", "clcodeorg", "clcodeorgbutoffline", "clcodercraft", "clcodmodernwarfare", "clcodworldatwar", "clcoffeemaker", "clcoldpines", "clcolorburst3d", "clcolormatch", "clcolorwatersort3d", "clcombopool", "clcommandandconquer", "clcommanderkeen4", "clcommanderkeen5", "clcommanderkeen6", "clconfrontingurself", "clconfrontingyourself", "clconkersbadfurday", "clcontra", "clcontra3", "clcookie-clicker", "clcookieclicker", "clcookieclickercool", "clcookieclickergood", "clcookieclickermodmenu", "clcookingmama", "clcookingmama2", "clcookingmama3", "clcoreball", "clcoryinthehouse", "clcotlk", "clcountmastersstickmangames", "clcoverorange", "clcoverorange2", "clcoverorangejourneygangsters", "clcoverorangejourneyknights", "clcoverorangejourneypirates", "clcoverorangejourneyspace", "clcoverorangeplayerspack", "clcoverorangeplayerspack2", "clcoverorangeplayerspack3(1)", "clcoverorangeplayerspack3", "clcrankit!", "clcrankit", "clcrash2", "clcrash3", "clcrashbandicoot (1)", "clcrashbandicoot", "clcrashbandicoot2", "clcrashteamracing", "clcrazycars", "clcrazycattle3d", "clcrazychicken3D", "clcrazyclimber", "clcrazyfrogracer", "clcrazymotorcycle", "clcrazypenguincatapult", "clcrazyplanelanding", "clcrazytaxigba", "clcreaturecardidle", "clcreeperworld2", "clcreepyinternetstories", "clcreepynightfunkin", "clcrimsonmadness", "clcrossyroad", "clcrunchball3000", "clCrystalCastles", "clcs16", "clcs6", "clcsds", "clcsgoclicker", "clctgpnitro", "clcurveball(1)", "clcurveball", "clcustomersupport", "clcuttherope", "clcuttheropeholiday", "clcuttheropetimetravel", "clcvooc", "clcyberbungracing", "clcybersensation", "cldadgame", "cldadish", "cldadnme", "cldaggerfall", "cldandysworldclicker", "cldanktomb", "cldasharena", "cldashio", "clDashmetry", "cldatewithiraq", "cldborigins", "cldborigins2", "cldbsniper", "cldbzattacksaiyans", "cldbzdevolution", "cldbzsuperwarriorssonic", "cldbzwarriors2", "clddlc64", "cldeadair", "cldeadestate", "cldeadfrontieroutbreak", "cldeadfrontieroutbreak2", "cldeadlydescent", "cldeadplate", "cldeadseat", "cldeadzed", "cldeadzed2", "cldeathchase", "cldeathrun", "cldeblob2", "cldecision", "cldecision2", "cldecision3", "cldecisionmedieval", "cldeepersleep", "cldeepestsword", "cldeepsleep", "cldefenderarcade", "cldefendyourcastle", "cldefendyournuts", "cldefendyournuts2", "cldeltarune", "cldeltatraveler", "cldementium", "cldemolitionderbycrashracing", "cldemonblade", "cldemonbluff", "cldiablo", "cldiamondhollow", "cldiamondhollow2", "cldiddykong-racing", "cldieinthedungeon", "cldigdeep", "cldigdug", "cldigdug2", "cldigdug26", "cldigtochina", "cldimensionalincident", "cldinodudes", "cldinorun", "cldinorunenterplanetd", "cldinorunmarathonofdoom", "cldiredecks", "cldkccompetitioncart", "clDKNESCollection(1)", "clDKNESCollection", "cldoblox", "cldogeminer", "cldogeminer2", "cldokidokiliteratureclub", "cldomeromantik", "cldonkeykong", "cldonkeykong64", "cldonkeykong94", "cldonkeykongcountry", "cldonkeykongcountry2", "cldonkeykongcountry3", "cldonkeykongnes", "cldontescape", "cldontescape2", "cldontescape3", "cldontyoulecturemehtml", "cldoodlejump", "cldoodlejumpgoober", "cldoom", "cldoom2", "cldoom2d", "cldoom2dDOS", "cldoom2dos", "cldoom3pack", "cldoom64", "cldoomdos", "cldoomemscripten", "cldoomps", "cldoompsalt", "cldoomzio", "cldoorscastle", "cldoswasmx", "cldoubledribble", "cldouchebaglife", "cldouchebagworkout", "cldouchebagworkout2", "cldownthemountain", "cldragonballadvance", "clDragonBallZTheLegacyofGoku", "cldragonquest5ds", "clDragonQuestIX", "cldragonwarriormonsters", "clDragonxclient", "cldrawclimber", "cldrawntolife", "cldrawntolife2", "cldrawtheline", "cldreader", "cldreadheadparkour", "cldriftboss", "cldrifthuntersmerge", "cldriftsimulator", "cldrivemady", "cldrivenwild", "cldriverussia", "cldrmario", "cldrweedgaster", "cldta6", "cldubstep", "clduckhunt", "clducklfe5", "clducklife", "clducklife2", "clducklife3", "clducklife4", "clducklifebattle", "clducklifespace", "clducklingsio", "clducktales", "clducktales2", "cldud", "cldukenukem2", "cldukenukem3d", "cldumbwaystodie", "cldumpling", "cldunebuggy", "cldungeondeck", "cldungeonraid", "cldungeonsanddegenerategamblers", "cldunkshot", "clduskchild", "cldyingdreams", "cldynamiteheaddy", "clEaglercraft-Alpha-126-Offline", "clEaglercraft-Beta-1.3-Offline", "clEaglercraft-Beta-13-Offline", "clEaglercraft-Indev-Offline (1)", "clEaglercraft-Indev-Offline(1)", "clEaglercraft-Indev-Offline(2)", "clEaglercraft-Indev-Offline", "cleaglercraft152", "clEaglercraftL_19_v0_7_0_Offline_Signed(1)", "clEaglercraftL_19_v0_7_0_Offline_Signed", "cleaglercraftnebula", "cleagleride", "clearntodie", "clearntodie2", "clearthbound", "clearthbound3", "clearthboundsnes", "clearthtaken", "clearthtaken2", "clearthtaken3", "clearthwormgg", "clearthwormjim (1)", "clearthwormjim", "clearthwormjim2 (1)", "clearthwormjim2", "cledelweiss", "cledyscarsimulator", "cleffinghail", "cleffingmachines", "cleffingworms", "cleffingzombies", "clegg", "cleggycar", "clelasticface", "clelectricman2", "clelevatoraction", "clelytraflight", "clemujs", "clenchain", "clendacopia", "clendlesswar4", "clendlesswar5", "clendlesswar5wow", "clendlesswar7", "clenduro", "clepicbattlefantasy5", "clescalatingduel", "clescaperoad", "clescaperoadcity2", "clescapeschoolduel", "clet", "cletrianoddyssey", "cleurovisionsim", "clevilglitch", "clevolution", "clexcitebike64", "clexitpath", "clexoobservation", "clextremerun3d", "clfactoryballs", "clfactoryballs2", "clfactoryballs3", "clfactoryballs4", "clfairytalevsonepiece", "clfallguys", "clfallout", "clfamidash", "clfamidash128", "clfamidashAlbum128", "clfamidashBSides128", "clfamidashCSides128", "clfamidashDSides128", "clfamilyguycorrupted", "clfancypantsadventure", "clfancypantsadventure2", "clfancypantsadventure3", "clfancysnowboarding", "clfantasyzone", "clfashionbattle", "clfattygenius", "clfearassessment", "clfearstofathomhomealone", "clfeedthevoid", "clfeedus", "clfeedus2", "clfeedus3", "clfeedus4", "clfeedus5", "clff2ws", "clFF3", "clff6", "clffaf", "clffmysticquest", "clFFsonic1", "clFFsonic2", "clFFsonic3", "clFFsonic4", "clFFsonic5", "clFFsonic61", "clFFsonic62", "clFIFA07", "clFIFA10", "clFIFA11", "clFIFA2000(1)", "clFIFA2000(2)", "clfifa2000", "clFIFA99", "clFIFAinternationalsoccer", "clFIFAroadtoworldcup98", "clFIFAsoccer06", "clFIFAsoccer95", "clFIFAsoccer96", "clFIFAsoccer97", "clFIFAstreet2", "clfinalearth2", "clfinalfantasy", "clfinalfantasy2nes", "clfinalfantasy3nes", "clfinalfantasyII", "clfinalfantasyIX", "clfinalfantasylegend2", "clfinalfantasytactics", "clfinalfantasyVI", "clfinalfantasyVII", "clfinalfantasyVIId2", "clfinalfantasyVIId3", "clfinalfantasyVIItheothertetrr", "clfinalninja", "clfindthealien", "clfireblob", "clfireboyandwatergirl", "clfireboyandwatergirl2", "clfireboyandwatergirl3", "clfireboyandwatergirl5", "clfireboyandwatergirl6", "clfireemblem", "clfisheatgettingbig", "clfisquarium", "clfivenightsatbaldisredone", "clfivenightsatepsteins", "clfivenightsatshreks", "clfivenightsatshrekshotel", "clfivenightsatyoshis", "clflappybird", "clflashsonic", "clfloodrunner", "clfloodrunner2", "clfloodrunner4", "clfluidism", "clfnac1", "clfnac2", "clFNAF", "clFNAF2", "clFNAF3", "clfnaf3remastered", "clFNAF4", "clfnaf4halloween", "clfnafanimatronics", "clfnafps", "clfnafshooter", "clfnafsl", "clfnafucn", "clfnafworldd", "clfnaw", "clfnfaethos", "clfnfagoti", "clfnfakage", "clfnfanimation", "clfnfannie", "clfnfasdf", "clfnfbelowdepths", "clfnfbfdi26", "clfnfbinarybreakdown", "clfnfblackbetrayal", "clfnfbside", "clfnfcamelliarudeblaster", "clfnfcandycarrier", "clfnfchara", "clfnfcitytales", "clfnfclassified", "clfnfcorrosion", "clfnfcory", "clfnfcrunchin", "clfnfdeciever", "clfnfdesolation", "clfnfdocumictxtv3", "clfnfdokitakeoverplus", "clfnfdropandroll", "clfnfdsides", "clfnfdustin", "clfnfdusttale", "clfnffleetway", "clfnfflippedout", "clfnffnaf1", "clfnffnaf2", "clfnffnaf3", "clfnffnatpt", "clfnfgamebreakerbundle", "clfnfgfmode", "clfnfgodot", "clfnfgoldenapple", "clfnfhank", "clfnfheartbreakhavoc", "clfnfherobrine", "clfnfhex", "clfnfholiday", "clfnfhorkglorpgloop", "clfnfhotline", "clfnfhypnoslullaby", "clfnfimposter3", "clfnfimposterv4", "clfnfindiecross", "clfnfinfernalbout", "clfnfinfiniteirida", "clfnfironlung", "clfnfjapcreepypasta", "clfnfmadnesspoop", "clfnfmaginagematches", "clfnfmariomadnessdside", "clfnfmarioport", "clfnfmcmadness", "clfnfmidfight", "clfnfmiku", "clfnfmobmod", "clfnfneo", "clfnfpiggyfield", "clfnfplutoshi", "clfnfpokepastaperdition", "clfnfporifera", "clfnfqt", "clfnfremnants", "clfnfretrospecter", "clfnfrevmixed", "clfnfrewrite", "clfnfrhythmicrev", "clfnfrottensmoothie", "clfnfselfpaced", "clfnfshaggy4keys", "clfnfshaggyxmatt", "clfnfshucks-v2", "clfnfshucksv2", "clfnfsky", "clfnfsoft", "clfnfsonicexe", "clfnfsonicexe4", "clfnfstarlightmayhem", "clfnfstridentcrisis", "clfnftailsgetstrolled", "clfnftooslowfran", "clfnftricky", "clfnfTWIDDLEFINGER", "clfnfundertale", "clfnfvoid", "clfnfvstabi", "clfnfwaltenfiles", "clfnfwednesday-infedility", "clfnfwhitty", "clfnfzardy", "clfocus", "clfolderdungeon", "clfootballbros", "clfootballlegends", "clforknsausage", "clfortzone", "clfpa4p1", "clfpa4p2", "clfreegemas", "clfreerider", "clfreerider2", "clfreerider3", "clfridaynightfunkin", "clfroggerarcade", "clfromrusttoash", "clfruitninja", "clfunkinmix", "clfunnybattle", "clfunnybattle2", "clfunnymadracing", "clfunnyshooter2", "clfunnyshooter22", "clfuschiax", "clfused240", "clfzero", "clfzerox", "clgachaverse", "clGain Ground", "clgalaga", "clgameandwatchcollection", "clgamewatchgallery3", "clgangstabean", "clgangstabean2", "clgangsterbros", "clgarcello", "clgarfcaughtinact", "clgdlite", "clgeneralchaos", "clgenericfightermaybe", "clgeometrydashscratch", "clgeometryvibes", "clgeorgeandtheprinter", "clgetawayshootout", "clgetontop", "clGettothetopalthoughthereisnotop", "clgetyoked", "clggshinobi", "clggshinobi2", "clghosttrick", "clgimmietheairpod", "clgladdihoppers", "clglfighters", "clgloryhunters", "clglover", "clgoalsouthafrica", "clgobble", "clgoingballs", "clgolddiggerfrvr", "clgoldenaxe", "clgoldenaxe2", "clgoldenaxe3", "clgoldeneye007", "clgoldensun", "clgoldensunnds", "clGoldenSunTheLostAge", "clgoldminer", "clgolfbattle", "clgolforbit", "clgolfsunday", "clgoodbigtowertinysquare", "clgoodbigtowertinysquare2", "clgoodboygalaxy", "clgoodmonkeymart", "clgooftroopsnes", "clgooglebaseball", "clgoogledino", "clgorescriptclassic", "clgorillatag", "clgotobed", "clgrandactionsimulator-ny", "clgranddad", "clgrandescapeprison", "clgrandtheftautoadvance", "clgranny", "clgranny2", "clgranny22", "clgranny3", "clgrannycreepy", "clgrannynightmare", "clgrannyy", "clgranturismo"];
-const $=id=>document.getElementById(id);
-function cleanName(id){
- let n=id.replace(/^cl/i,'').replace(/\.html?$/i,'');
- n=n.replace(/([a-z])([A-Z])/g,'$1 $2').replace(/[_-]+/g,' ').replace(/\s+/g,' ').trim();
- const acronyms={fnaf:'FNAF',fnf:'FNF',gta:'GTA',nba:'NBA',nes:'NES',sms:'SMS',doom:'DOOM','2d':'2D','3d':'3D',io:'IO',vr:'VR',rpg:'RPG',fps:'FPS'};
- n=n.split(' ').map(word=>acronyms[word.toLowerCase()]||(/^\d+$/.test(word)?word:(word.length<=3?word.toUpperCase():word[0].toUpperCase()+word.slice(1).toLowerCase()))).join(' ');
- return n;
-}
-function keyName(s){return s.toLowerCase().replace(/^cl/,'').replace(/[^a-z0-9]/g,'')}
-function fallbackCover(name,id){
- const safe=(name||'Game').replace(/[&<>"]/g,'');
- const hue=[...id].reduce((a,c)=>a+c.charCodeAt(0),0)%28;
- const svg=`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#${hue<14?'55240f':'2d1a17'}"/><stop offset="1" stop-color="#100c0b"/></linearGradient></defs><rect width="400" height="300" fill="url(#g)"/><circle cx="330" cy="50" r="75" fill="#ff7a18" opacity=".12"/><text x="200" y="115" fill="#ffbd69" font-size="62" text-anchor="middle">🎮</text><text x="200" y="180" fill="#fff4e9" font-family="Arial" font-size="23" font-weight="bold" text-anchor="middle">${safe.slice(0,28)}</text><text x="200" y="220" fill="#b9a69b" font-family="Arial" font-size="13" text-anchor="middle">HAUNTHUB ARCADE</text></svg>`;
- return 'data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svg);
-}
-let games=IDS.map(id=>({id,name:cleanName(id)}));
-let activeLetter='';
-function renderLetters(){
- const letters=['All',...'0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'];
- $('letters').replaceChildren();
- letters.forEach(letter=>{const b=document.createElement('button');b.textContent=letter;b.className=(activeLetter===letter||(activeLetter===''&&letter==='All'))?'active':'';b.onclick=()=>{activeLetter=letter==='All'?'':letter;render()};$('letters').append(b)});
-}
-const COVER_BASES=[
- {zones:'https://cdn.jsdelivr.net/gh/gn-math/assets@main/zones.json',covers:'https://cdn.jsdelivr.net/gh/gn-math/covers@main'},
- {zones:'https://cdn.jsdelivr.net/gh/freebuisness/assets@latest/zones.json',covers:'https://cdn.jsdelivr.net/gh/freebuisness/covers@main'}
+const LIST_URL = "https://cdn.jsdelivr.net/gh/bubbls/ugs-singlefile@latest/games.js";
+const GAME_BASE = "https://cdn.jsdelivr.net/gh/bubbls/ugs-singlefile/UGS-Files/";
+/* Cover art: matched by name against the same GN-Math catalog your homepage uses. */
+const COVER_SOURCES = [
+  { zones:"https://cdn.jsdelivr.net/gh/gn-math/assets@main/zones.json", html:"https://cdn.jsdelivr.net/gh/gn-math/html@main", covers:"https://cdn.jsdelivr.net/gh/gn-math/covers@main" },
+  { zones:"https://cdn.jsdelivr.net/gh/freebuisness/assets@latest/zones.json", html:"https://cdn.jsdelivr.net/gh/freebuisness/html@main", covers:"https://cdn.jsdelivr.net/gh/freebuisness/covers@main" }
 ];
-function normTitle(s){return String(s||'').toLowerCase().replace(/^cl/,'').replace(/[^a-z0-9]/g,'')}
-const realCoverMapPromise=Promise.all(COVER_BASES.map(async source=>{
- try{
-  const res=await fetch(source.zones);
-  if(!res.ok)throw new Error('cover metadata unavailable');
-  const rows=await res.json(), map=new Map();
-  rows.forEach(item=>{
-   if(!item||!item.name||!item.cover)return;
-   let cover=String(item.cover).replaceAll('{COVER_URL}',source.covers).replaceAll('{HTML_URL}','https://cdn.jsdelivr.net/gh/gn-math/html@main');
-   if(!/^https?:\/\//i.test(cover))cover=source.covers+'/'+cover.replace(/^\//,'');
-   map.set(normTitle(item.name),cover);
+
+/* ---- name cleanup ---- */
+const WORDS = ("super mario bros brothers sonic pokemon poke emerald fire red leaf green blue yellow gold silver crystal ruby sapphire black white " +
+ "the of and in on to a an my your you is it its at for vs with from run game games world land kart party paint star stars legend legends zelda " +
+ "link awakening minish cap dragon ball z quest final fantasy castlevania metroid kirby donkey kong country crash bandicoot street fighter " +
+ "mortal kombat mega man x zero tetris pac man pacman doom quake gta grand theft auto minecraft craft block blocks ball balls bomb bomber " +
+ "baseball basketball football soccer hockey tennis golf boxing racing race car cars truck bike moto motorcycle stunt stunts driving drive " +
+ "zombie zombies shark sharks ninja stick stickman war wars tower defense td idle clicker cookie clicker slope snow rider fnf fnaf night nights " +
+ "five freddy funkin friday papa papas pizza burger pizzeria bakeria cheeseria cupcakeria freezeria hotdoggeria pancakeria pastaria scooperia sushiria tacomia wingeria " +
+ "granny baldi baldis basics bloons monkey duck life hobo happy wheels fireboy watergirl geometry dash cut rope learn fly flappy bird angry birds " +
+ "plants vs zombies temple subway surfers retro bowl shell shockers madness combat swat strike force heroes heroes factory " +
+ "earth worm jim thing escape room prison break obby only up impossible quiz riddle school one hit hot shot half life portal " +
+ "adventure adventures time space invaders galaga asteroids frogger centipede donkey punch out wario ware smash flash ultimate " +
+ "advance gba nes snes ds ps psx n64 gb dx ex remix remastered redux edition deluxe classic arcade mania plus pro lite hd 2d 3d io " +
+ "big small little tiny mini max mad bad good best new old dark light cold hot ice fire water earth air wind storm thunder shadow ghost haunted horror " +
+ "death dead dying die live alive kill killer blood bloody gun guns shooter shooting sniper rush clash battle fight fighter fighting " +
+ "tank tanks plane planes jet air force sea ship pirate pirates cowboy cowboys west wild forest jungle desert island mountain cave dungeon dungeons castle kingdom king queen prince princess " +
+ "rpg td sim simulator tycoon farm farming cook cooking restaurant shop store bank robbery heist thief steal brain rot brainrot skibidi toilet sprunki " +
+ "cat cats dog dogs bunny rabbit chicken pig pigs penguin bear bears fish fishing frog frogs bee bees spider ant ants bat bats " +
+ "color colors match sort puzzle word words maze mazes jump jumper climb climber fall falling fly flying swing swinging slide sliding roll rolling " +
+ "bounce bouncy flip flips merge stack stacky drop dropper catch throw toss launch cannon rocket missile command defender defend " +
+ "chess checkers solitaire poker blackjack roulette uno bingo slots dice cards card pool billiards bowling darts " +
+ "undertale deltarune terraria spelunky celeste meat boy isaac binding hollow knight cuphead ori " +
+ "whitty san francisco york orleans paulo petersburg angeles vegas miami london berlin paris tokyo mexico monaco zurich havana houston iceland barcelona beijing buenos aires lol hit boss run tag ropes pepper "+
+ "eagler eaglercraft client offline online v1 v2 v3 v4 v5 v6 v7 v8 v9 demo beta alpha final remake").split(/\s+/).filter(Boolean);
+WORDS.push("bitlife","motox3m","x3m","happywheels","apple","worm","ace","attorney","awesome","bomberman","wars","fantasy");
+WORDS.push(...("abandoned about accurate ace achievement adventure adventurer aethos again ages ahoge akage alien all alone alpha alternated amanda amaze and andy angel angry animal anomaly answer antonblast anything ape apes apocalypse apollo apple aquapark archers archery are arena army arthur assessment attack attorney auto aviamasters awesome azahar babey baby backrooms bacon bad bag bakeria baldi ball balls bambi bank bart baseball bash basics basket basketball battle battles bazar bazooka bear beasts beatblock beats become behold bendy bennett bergentruck beta bfdia big bike binding bird birds bison bite bitgun bitlife bitplanes bizarre black blackjack blade blast block blockpost blocky bloodmoney bloons bloxorz blumgi bob bolt bombs boom boost bopcity boss bot bottle bouncemasters bowl bowling bowmasters box boxing boy brainrot brawl breach breaklock breakout breath bricks bridge bros brotato bucks buckshot build buildnow burgeria burrito bust buster but camouflage candy cannon capatalist car carbon carol carrom cars caseoh cat cattle cave celeste cell challenges champion chaos chapters chat cheese cheeseria chess chicken chiikawa chompers choppy christmas chrome circloo city clash class classic clicker climb climber climbing clone clothing clover cluster clustertruck code collection college color combat coming command comments community company conflict connection conquer containment control cookie cooking cool coreball corporation corrupted count court crack crackhouse craft crash crawler crazy cream creepypasta crimson cross crossing crossy cruelty crush cubed cubefield cup cupcakeria cuphead custom cut cyber daddy dadish daikaiju daily dalgona dan dance danger darkness dash dashers date dave dawn dead deadseat death decompile deep defense deltarune deltatraveler destiny destroy destruction diamond dice die difficult dig dimension dimensions dodo doge doggeria doll don dont donuteria doodle doom downhill dragon draw dreadhead drift drive driven drivers drop duck duel duelist dumb dunk earth eating edgeworth edition editor education effects elastic emerald empire emulator endacopia endless endoparasitic endroll epstein escape evil evilcorp evolving evowars exe expenditure experiments factory fallout famidash fancy fantasy farm fashion fast fathom fear fears feeding feud fifa fight fighter fih final find fire fireboy firered fish fishing fitness five flappy flash fleetway flesh flick flight flip floor fly flying fnf foddy food football for force fork fortress fortzone freddy freezeria frickbear friday frost fruit frvr fundamental funeral funk funkin fury fused future fuumaroku gabriel game gamecube games gang garcello gardenless gash gear generic gensokyou geometry get getaway getting giant gift gladihoppers glitch goal gobble goblets goblin god godzilla going golf gon google goopmaxxing goose gorilla goty gpt grand granny grass great groon growden guess gumballs gun gunner guns gunspin guy guys half halloween hammer happy hardest harvest hate hatsune have havoc hazards heart heartbreak heartgold heaven hedgehog heels helium helltaker henry heritage hero hex hide high highway hill hippo hit hobo hole holiday hollow home hominid honeycomb hook hoop horror hot hotel hotline house hover hula human hunger hungry hunters hustle hypno hypper ice idle iii impossible impostor inc incident indev indie infidelity infinimoes ink inscryption inside into invasion investigations iron island issac jam jammer jeffrey jeffy jelly jetpack johnny jojo journey joust jousts joyride jumbo jump jumper jumpers jumps just justfall justice kah kaikidan kaji kapi karlson karts katch kidnapping kindergarten kiosk kirby kitchen kitty knight knights kombat krabby lacey lain lamb lammy lamu land last launcha layers lazy learn lecture legacy legend lethal letters level libre life line lite little lobotomy location lol look loop love lullaby lumber luminous lung machine madalin madness madriguera magic majora make makeover mama man mania mario mask massacre masses master masters match max may maybe maze meatboy medieval mega melon merge metal mia miami mid midnight miku miles milk million mindwave minecraft miner minesweeper mini mining minutes miside mistful mix mixed mob monday money monkey monster morning most mother moto mountain mouth move mowing must mutilate myteardrop nazi nds need needy neighbor neo neon nes newgrounds next nexus night nightmare nights nijika nikki ninja nom nonsense not novel nubby number obby ocarina off office offroad omori one oneshot online only onslaught operation opposing orange orc oregon original oshi osu outhold outside over overburden overload ovo pac pacman pages pancakeria pants papa paper papers papery parappa parenting parking parkour part party pastaria pastry peak peaks peggle people phase phoenix pibby pico piggies pikuniku pit pixel pizeria pizza plague plane planes plants plate playable playground please plinko plus pocket pokemon pokey poly pool portable portaboy postal pottery pou power program project protektor punch puzzle quake queen quiz race racer racing raft ragdoll rainbow raldi rancher random rapper ravenfield ray real reatomized reboom reboot rebooted recoil red redux refreshed regions reiiden reloaded remake remastered resident restaurant retro rev rewrite rex rhythm ribbon rich riddle rider riders rigbmx rio road robber robbery robo robot rocket rogue roll rolling rolly rooftop rookies room rope roulette round royal royale ruffle rumble run runaway runmo runner rush saihate sam sandals sandbox sandboxels sandspiel sandstone sandtris sandy sarvente saturn sausage scale scampton scare scary school schoolboy schoolhouse scooperia scoutdigo scp scrap scratch scream seat seconds seek seeker sensation sergeant serial shaggy shapes shapez shawarma sheepies shift shipo shoot shooter shooting shootout shop shot shovel showdown shredsauce shrek shucks side sides silent silksong simulator single sister sizzlin sky slasher slender slendytubbies slice slime slingers slither slope slowroads small smash snakes sniper snipers snow snowbattle soccer soft solar solid sonic sort souls soundboard space spacebar spaceflight speed speedrun spelunky spiderdoll spiral sponge spongebob spooky sprunki squad square squarepants squeak squid squidward stacker stacky star stardew stars state station steal stick stickman stickmin stone story streamer strike stunt suggest suicide suika sunday sunset super superboat superfast superhot supermarket supreme survival survive survivor survivors sushi sushiria swat swordfight swords tabi tabs taco tag take takeover talking tall tanks tanuki tasty tattletail tay team teen telekinesis temple termina terraria territorial tetris that the theft their they thing this three tiles tiletopia till time tiny titans tomb tomodachi toss totally touch touched touhou tour tower towers toy track tracks traffic trail transfer travel trees trials tribulations tricky trigger triple trivia trombone tube tug tunnel turbo turtle twerk twiddlefinger twisted ultimate ultra ultrakill ultrapool underground undertale underwheels unlocked untitled upgrade uvuvwevwevweonyetenvewveugwemubwemossas valley vampire vena vex vib victory vii vikings vol volley vortex wall wanna wanted war warioware wars water watergirl waterworks waves ways weapon web webfishing wednesday weresquirrel wet what wheels wheely whitty who wild window wingeria winston winter witch with woke wordle world worst wrath wright xmas yandere yellow yohoho yoked yore you your yume yumejikuu zardy zelda zombie zombies").split(" "));
+const WSET = new Set(WORDS);
+
+function segment(s){
+  const n = s.length, best = new Array(n+1).fill(Infinity), prev = new Array(n+1).fill(-1);
+  best[0] = 0;
+  for(let i=1;i<=n;i++){
+    for(let j=Math.max(0,i-14);j<i;j++){
+      if(best[j]===Infinity) continue;
+      const w = s.slice(j,i);
+      const known = WSET.has(w);
+      const tiny = (i - j) <= 2;
+      const cost = best[j] + (known ? (tiny ? 5 : 1) : (i - j) * 3 + 4 + (tiny ? 20 : 0));
+      if(cost < best[i]){ best[i]=cost; prev[i]=j; }
+    }
+  }
+  const out=[]; let i=n;
+  while(i>0){ out.unshift(s.slice(prev[i],i)); i=prev[i]; }
+  return out;
+}
+
+function prettify(id){
+  let s = id.replace(/^cl/,"").replace(/\.html?$/i,"").replace(/\s*\(\d+\)\s*$/,"").replace(/[\uFFFD]/g,"e");
+  s = s.replace(/x3m/ig," X3M ").replace(/[_\-]+/g," ").replace(/\s+/g," ").trim();
+  if(!s) return id;
+  const parts = s.split(" ").flatMap(p=>{
+    // camelCase / digits split
+    if(/[()]/.test(p)) return [p];
+    let q = p.replace(/^(\d+v\d+)(?=[a-z])/i,"$1 ").replace(/([a-z])([A-Z])/g,"$1 $2").replace(/([A-Za-z]{3,})(\d)/g,"$1 $2").replace(/(\d)([A-Za-z]{3,})/g,"$1 $2");
+    return q.split(" ").flatMap(t=>{
+      if(/^\d+$/.test(t) || t.length<=3) return [t];
+      if(t!==t.toLowerCase() && t!==t.toUpperCase()) return [t]; // mixed case already readable
+      const seg = segment(t.toLowerCase());
+      const unk = seg.filter(w=>!WSET.has(w));
+      const tiny = unk.filter(w=>w.length<=2).length;
+      return (unk.join("").length > t.length*0.5 || tiny>=1 && unk.length>=2) ? [t] : seg;
+    });
   });
-  return map;
- }catch{return new Map()}
-})).then(maps=>{const merged=new Map();maps.forEach(m=>m.forEach((v,k)=>{if(!merged.has(k))merged.set(k,v)}));return merged}).catch(()=>new Map());
-function realCoverFor(game){
- return realCoverMapPromise.then(map=>map.get(normTitle(game.name))||null);
+  return parts.map(w=>{
+    if(/^(gba|nes|snes|gb|ds|dx|ex|td|rpg|io|hd|2d|3d|fnf|fnaf|gta|psx|n64|ps1|cod|pvz|btd|vs)$/i.test(w)) return w.length<=3 && w!=="vs" ? w.toUpperCase() : (w==="vs"?"vs":w.toUpperCase());
+    return w.charAt(0).toUpperCase()+w.slice(1);
+  }).join(" ");
 }
-function render(){
- const query=$('search').value.trim().toLowerCase(), sort=$('sort').value;
- let list=games.filter(g=>g.name.toLowerCase().includes(query)||g.id.toLowerCase().includes(query));
- if(activeLetter)list=list.filter(g=>g.name.toUpperCase().startsWith(activeLetter));
- list.sort((a,b)=>sort==='az'?a.name.localeCompare(b.name):b.name.localeCompare(a.name));
- $('count').textContent=list.length.toLocaleString()+' games listed';
- $('results').replaceChildren();
- if(!list.length){$('results').textContent='No games match your search.';return}
- const groups=new Map();
- list.forEach(g=>{const letter=/^[0-9]/.test(g.name)?g.name[0]:g.name[0].toUpperCase();if(!groups.has(letter))groups.set(letter,[]);groups.get(letter).push(g)});
- for(const [letter,items] of groups){
-  const section=document.createElement('section');section.className='section';
-  const h=document.createElement('h2');h.textContent=letter;section.append(h);
-  const grid=document.createElement('div');grid.className='grid';
-  items.forEach(g=>{
-   const card=document.createElement('article');card.className='game';card.tabIndex=0;
-   const c=document.createElement('div');c.className='cover';const img=document.createElement('img');img.alt=g.name+' cover';img.loading='lazy';img.src=fallbackCover(g.name,g.id);
-   // Use an actual cover URL from catalog metadata when the title matches; otherwise keep the generated fallback.
-   img.onerror=()=>{img.onerror=null;img.src=fallbackCover(g.name,g.id)};
-   realCoverFor(g).then(url=>{if(url){img.src=url;img.dataset.coverSource='catalog'}});
-   c.append(img);
-   const t=document.createElement('div');t.className='title';t.textContent=g.name;
-   const sub=document.createElement('div');sub.className='sub';sub.textContent='↗ Open game in new tab';t.append(sub);
-   card.append(c,t);card.onclick=()=>launch(g);card.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();launch(g)}};
-   grid.append(card);
+
+
+
+const $ = id => document.getElementById(id);
+const norm = s => String(s).toLowerCase().replace(/[^a-z0-9]/g, "");
+let ugsGames = [];
+let coverMap = new Map();
+
+function setStatus(message, type = "") { $("status").className = "status " + type; $("status").textContent = message; }
+function isHttpUrl(v) { try { const u = new URL(v); return u.protocol === "https:" || u.protocol === "http:"; } catch { return false; } }
+
+function gameUrl(id) {
+  const file = /\.[A-Za-z0-9]+$/.test(id) && id.lastIndexOf(".") > 0 ? id : id + ".html";
+  return GAME_BASE + encodeURIComponent(file);
+}
+
+async function fetchJson(url, ms = 15000) {
+  const c = new AbortController(), t = setTimeout(() => c.abort(), ms);
+  try { const r = await fetch(url, { signal: c.signal, cache: "no-store" }); if (!r.ok) throw new Error("HTTP " + r.status); return await r.json(); }
+  finally { clearTimeout(t); }
+}
+async function fetchText(url, ms = 20000) {
+  const c = new AbortController(), t = setTimeout(() => c.abort(), ms);
+  try { const r = await fetch(url, { signal: c.signal, cache: "no-store" }); if (!r.ok) throw new Error("HTTP " + r.status); return await r.text(); }
+  finally { clearTimeout(t); }
+}
+
+function coverUrlFor(item, src) {
+  let raw = item.cover ?? item.image ?? item.thumbnail ?? item.icon ?? "";
+  const id = item.id ?? item.gameId ?? item.slug;
+  if (typeof raw === "string" && raw.trim()) {
+    raw = raw.trim().replaceAll("{COVER_URL}", src.covers).replaceAll("{HTML_URL}", src.html);
+    if (isHttpUrl(raw)) return raw;
+    if (raw.startsWith("//")) return "https:" + raw;
+    if (raw.startsWith("/")) return src.html + raw;
+    return src.covers + "/" + raw.replace(/^\.?\//, "");
+  }
+  return id != null ? src.covers + "/" + encodeURIComponent(String(id)) + ".png" : "";
+}
+
+/* Built-in cover list (839 games from the GN-Math catalog), so matching works even if the catalog can't be loaded. */
+const STATIC_COVER_BASE = "https://cdn.jsdelivr.net/gh/freebuisness/covers@main/";
+const STATIC_COVERS = {"60 Seconds! Reatomized":"858.png","Antonblast":"711.png","Bad Parenting 1":"166.png","Baldi's Basics Plus":"467.png","Bendy and the Ink Machine":"215.png","Buckshot Roulette":"205.png","Celeste":"623.png","Chat Bot AI (A.I GPT)":"253.png","Clover Pit":"716.png","Cuphead":"465.png","Five Nights at Freddy's: Pizza Simulator":"191.png","Five Nights at Freddy's: Sister Location":"185.png","Geometry Dash":"868.png","Half Life":"262.png","Hollow Knight":"468.png","Hollow Knight: Silksong":"771.png","Iron Lung":"705.png","Just Shapes & Beats":"826.png","Karlson":"542.png","Kindergarten":"445.png","Lobotomy Corporation":"850.png","Minecraft 1.12.2":"182.png","OMORI":"427.png","Oneshot (LEGACY)":"622.png","People Playground":"194-m.png","Pizza Tower":"267.png","R.E.P.O":"195.png","Schoolboy Runaway":"605.png","Slime Rancher":"591.png","Soundboard":"179.png","Stick War: Legacy":"666.png","Tattletail":"607.png","Terraria":"669.png","That's Not My Neighbor":"216.png","Totally Accurate Battle Simulator (TABS)":"827.png","ULTRAKILL":"196.png","Untitled Goose Game":"718.png","WebFishing":"423.png","Your Only Move Is HUSTLE":"776.png","Yume Nikki":"433.png","-3":"816.png","-b":"817.png","1 Date Danger":"653.png","10 Minutes Till Dawn":"430.png","12 Mini Battles":"295.png","1v1.LoL":"58.png","20 Minutes Till Dawn":"819.png","2048":"114.png","2048 Merge Run":"375.png","3D Bolt Master":"663.png","3D Bowling":"320.png","64 in 1 NES":"732.png","8 Ball Classic":"146.png","8 Ball Pool":"115.png","99 Balls":"431.png","A Bite at Freddy's":"258.png","A Dance of Fire and Ice":"59.png","A Difficult Game About Climbing":"672.png","A Game About Feeding A Black Hole":"719.png","A Small World Cup":"435.png","Abandoned":"432.png","Ace Attorney Investigations - Miles Edgeworth":"823.png","Achievement Unlocked":"60.png","Achievement Unlocked 2":"61.png","Achievement Unlocked 3":"62.png","Adventure Capatalist":"354.png","Adventure Drivers":"443.png","Ages of Conflict":"444.png","Alien Hominid":"304.png","Amanda the Adventurer":"450.png","Amaze":"26.png","Andy's Apple Farm":"426.png","Angry Birds":"63.png","Angry Birds Chrome":"316.png","Angry Birds Showdown":"147.png","Animal Crossing (GAMECUBE)":"828.png","Apes vs Helium":"783.png","Apollo Justice - Ace Attorney":"821.png","Aquapark.io":"448.png","Archery World Tour":"148.png","Arthur's Nightmare":"645.png","Attack Hole":"13.png","Aviamasters":"552.png","Awesome Tanks":"436.png","Awesome Tanks 2":"438.png","Azahar (Emulator)":"849.png","Backrooms":"64.png","Bacon May Die":"268.png","Bad Ice Cream":"269.png","Bad Ice Cream 2":"270.png","Bad Ice Cream 3":"271.png","Bad Monday Simulator":"522.png","Bad Piggies":"752.png","Bad Time Simulator":"472.png","Baldi's Basics":"65.png","Baldi's Basics Classic Remastered":"466.png","Baldi's Basics The Ultra Decompile":"815.png","Ball Blast":"149.png","Bank Robbery":"697.png","Bank Robbery 2":"439.png","Bank Robbery 3":"698.png","Bart Bash":"775.png","Bart Blast":"740.png","Baseball Bros":"547.png","Basket Battle":"25.png","Basket Bros":"285.png","Basket Random":"66.png","Basketball Frvr":"28.png","Basketball Stars":"272.png","Bazooka Boy":"29.png","BeatBlock":"787.png","Bendy and the Ink Machine: ALL CHAPTERS":"803.png","BERGENTRUCK 201x":"455.png","BFDIA 5b":"637.png","BFDIA 5b: 5*30":"638.gif","Big ICE Tower Tiny Square":"69.png","Big NEON Tower Tiny Square":"68.png","Big Tower Tiny Square":"67.png","Big Tower Tiny Square 2":"170.png","Binding of Issac: Wrath of the Lamb":"350.png","BitGun.io":"561.png","BitLife":"70.png","BitPlanes":"330.png","BlackJack":"312.png","Blade Ball":"167.png","Block Blast":"6.png","BlockPost":"273.png","Blocky Snakes":"168.png","BLOODMONEY!":"454.png","Bloons TD":"71.png","Bloons TD 2":"72.png","Bloons TD 3":"73.png","Bloons TD 4":"74.png","Bloons TD 5":"75.png","Bloxorz":"169.png","Blumgi Rocket":"353.png","Bob The Robber 2":"76.png","Boom Slingers: Reboom":"562.png","Bottle Jump 3D":"30.png","Bouncemasters":"437.png","Bowmasters":"0.png","Boxing Random":"77.png","Brawl Guys.io":"121.png","Brawl Simulator 3D":"755.png","Breaklock":"753.png","Breath of the Wild NDS":"726.png","Bridge Race":"14.png","Brotato":"723.png","Build a Big Army":"376.png","Build a Plane":"377.png","Build a Queen":"319.png","BuildNow.gg":"581.png","Burrito Bison: Launcha Libre":"78.png","Bust a Loop":"521.png","Buster Jam":"646.png","Camouflage and Sniper":"378.png","Candy Crush":"171.png","Cannon Balls 3D":"150.png","Cannon Basketball":"79.png","Cannon Basketball 2":"80.png","Car Survival 3D":"379.png","Carrom Clash":"202.png","CaseOh's Basics in Eating and Fast Food":"758.png","Cat Connection":"536.png","Cat Gunner: Super Zombie Shoot":"537.png","Cave Story":"632.png","Celeste PICO":"440.png","Cell Machine":"730.png","CG FC 25":"563.png","Cheese Chompers 3D":"165.png","Cheese Rolling":"762.png","Chess Classic":"151.png","Chiikawa Puzzle":"539.png","Choppy Orc":"464.png","Christmas Massacre":"734.png","CircloO":"274.png","CircloO 2":"275.png","City Defense":"380.png","City Smash":"449.png","Clash Of Vikings":"545.png","Class of '09":"259.png","Clothing Shop 3D":"381.png","Cluster Rush":"81.png","ClusterTruck":"848.png","Code Editor":"429.png","Color Match":"31.png","Color Water Sort 3D":"15.png","Command & Conquer":"773.png","Cookie Clicker":"82.png","Cooking Mama":"681.png","Cooking Mama 2":"682.png","Cooking Mama 3":"683.png","Cool Cars Run 3D":"382.png","Coreball":"83.png","Count Masters: Stickman Games":"564.png","Crazy Cars":"331.png","Crazy Cattle 3D":"164.png","Crazy Chicken 3D":"255.png","Crazy Kitty 3D":"256.png","Crossy Road":"24.png","Cruelty Squad":"825.png","Crush Cars 3D":"383.png","Cubefield":"84.png","Cut the Rope":"85.png","Cut the Rope: Holiday Gift":"214.png","Cut the Rope: Time Travel":"213.png","Dadish":"357.png","Dadish 2":"355.png","Dadish 3":"356.png","Dadish 3D":"358.png","Daily Dadish":"359.png","Dalgona Candy Honeycomb Cookie":"565.png","Dan The Man":"520.png","DEAD PLATE":"462.png","Death Run 3D":"211.png","Deltatraveler":"560.png","Destiny Run 3D":"384.png","Destroy The Car 3D":"385.png","Diamond Seeker":"386.png","Dice a Million":"759.png","Dig Deep":"32.png","Dimension Incident":"727.png","Do NOT Take This Cat Home":"193.png","Doge Miner":"511.png","DON'T YOU LECTURE ME":"352.png","Doodle Jump":"470.png","DOOM":"203.png","Doom 2":"602.png","Doom 3":"626.png","Dragon vs Bricks":"210.png","Draw Climber":"86.png","Draw Joust":"387.png","Draw the Hill":"209.png","Draw the Line":"152.png","Dreadhead Parkour":"310.png","Drift Boss":"276.png","Drift Hunters":"173.png","Driven Wild":"43.png","Duck Life":"234.png","Duck Life 2":"235.png","Duck Life 3":"236.png","Duck Life 4":"237.png","Duck Life 5":"238.png","Duck Life 8":"695.png","Dumb Ways to Die":"738.png","Elastic Man":"197.png","Emulator.JS":"87.png","Endacopia":"860.png","Endoparasitic":"286.png","Endoparasitic 2":"724.png","Endroll":"631.png","Escape Road":"264.png","Escape Road 2":"265.png","Escape Road 3":"792.png","Escape Road City 2":"744.png","Evil Glitch":"277.png","Evolving Bombs 3D":"388.png","EvoWars.io":"360.png","Fallout":"585.png","Famidash":"735.png","Fancy Pants Adventure":"333.png","Fancy Pants Adventure 2":"334.png","Fancy Pants Adventure 3":"335.png","Fancy Pants Adventure 4 Part 1":"336.png","Fancy Pants Adventure 4 Part 2":"337.png","Fashion Battle":"127.png","Fear & Hunger":"706.png","Fear & Hunger 2: Termina":"794.png","Fear Assessment":"728.png","Fears to Fathom: Home Alone":"460.png","FIFA 10":"686.png","FIFA 11":"685.png","Fih":"797.png","Final Earth 2":"512.png","Final Fantasy VII":"654.png","Find the Alien":"323.png","Fire and Frost Master":"389.png","Fireboy and Watergirl 2":"88.png","Fireboy and Watergirl 3":"89.png","FISH":"761.png","Fitness Empire":"390.png","Five Night's at Shrek's Hotel":"764.png","Five Nights at Candy's":"503.png","Five Nights at Candy's 2":"504.png","Five Nights at Epstein's":"710.png","Five Nights at Freddy's":"38.png","Five Nights at Freddy's 2":"39.png","Five Nights at Freddy's 3":"40.png","Five Nights at Freddy's 4":"41.png","Five Nights at Freddy's 4: Halloween":"428.png","Five Nights at Freddy's: Ultimate Custom Night":"192.png","Five Nights at Freddy's: World":"190.png","Five Nights at Freddy's: World Refreshed":"704.png","Five Nights at Frickbear's 3":"813.png","Five Nights at Last Breath":"750.png","Five Nights at Winston's":"204.png","Flappy Bird":"129.png","Flappy Dunk":"153.png","Flick Goal":"391.png","Flip Master":"392.png","Flying Gorilla 3D":"763.png","FNF vs Bob v2.0 (Bob’s Onslaught)":"618.png","FNF vs Pibby Corrupted":"700.png","FNF Vs. Hypno's Lullaby v2":"600.png","FNF Vs. Sonic.EXE 3.0/4.0":"601.png","Football Bros":"548.png","Fork n Sausage":"154.png","Fortzone Battle Royale":"120.png","Friday Night Funkin":"8.png","Friday Night Funkin vs Carol V2":"610.png","Friday Night Funkin VS Impostor v4":"608.png","Friday Night Funkin vs Nonsense":"644.png","Friday Night Funkin vs Shaggy":"559.png","Friday Night Funkin vs Shucks v2":"836.png","Friday Night Funkin vs Sunday Remastered HD":"609.png","Friday Night Funkin vs Tabi":"714.png","Friday Night Funkin vs Undertale":"657.png","Friday Night Funkin vs Zardy":"715.png","Friday Night Funkin Vs. Cyber Sensation":"558.png","Friday Night Funkin Vs. Dave and Bambi v3":"615.png","Friday Night Funkin VS. KAPI":"555.png","Friday Night Funkin VS. Sky":"556.png","Friday Night Funkin' D-Sides":"636.png","Friday Night Funkin' Drop and Roll, but Playable":"613.png","Friday Night Funkin’ Soft":"509.png","Friday Night Funkin' Sunday Night Suicide: Rookies Edition":"642.png","Friday Night Funkin' vs Hypno Lullaby":"583.png","Friday Night Funkin' VS Impostor B-Sides":"639.png","Friday Night Funkin’ Wednesday's Infidelity":"616.png","Friday Night Funkin': 17 Bucks: Floor 1":"498.png","Friday Night Funkin': AKAGE":"690.png","Friday Night Funkin': B-Sides":"475.png","Friday Night Funkin': Chaos Nightmare - Sonic Vs. Fleetway":"634.png","Friday Night Funkin': Creepypasta JP":"484.png","Friday Night Funkin': Darkness Takeover":"525.png","Friday Night Funkin': FIRE IN THE HOLE: Lobotomy Dash Funkin'":"499.png","Friday Night Funkin': Gumballs":"621.png","Friday Night Funkin': Heartbreak Havoc [Vs. Sky: REDUX]":"691.png","Friday Night Funkin': Hit Single Real":"483.png","Friday Night Funkin': Indie Cross":"489.png","Friday Night Funkin': Jeffy's Endless Aethos":"496.png","Friday Night Funkin': Mario's Madness":"582.png","Friday Night Funkin': Mistful Crimson Morning Reboot":"488.png","Friday Night Funkin': Neo":"478.png","Friday Night Funkin': Pibby: Apocalypse":"541.png","Friday Night Funkin': Rev-Mixed":"619.png","Friday Night Funkin': Sarvente's Mid-Fight Masses":"480.png","Friday Night Funkin': Sonic Legacy":"486.png","Friday Night Funkin': TWIDDLEFINGER":"500.png","Friday Night Funkin': V.S. Whitty":"474.png","Friday Night Funkin': vs. BOPCITY":"497.png","Friday Night Funkin': vs. Garcello":"485.png","Friday Night Funkin': Vs. Hatsune Miku":"477.png","Friday Night Funkin': VS. Henry Stickmin V4":"862.png","Friday Night Funkin': Vs. Hex":"476.png","Friday Night Funkin': VS. Impostor: Alternated":"633.png","Friday Night Funkin': VS. Mario Ultra Rebooted":"861.png","Friday Night Funkin': vs. QT":"487.png","Friday Night Funkin': VS. Seek's Cool Deltarune":"864.png","Friday Night Funkin': VS. Super Mario Bros. Funk Mix DX":"863.png","Friday Night Funkin': vs. Tricky":"481.png","Fruit Ninja":"261.png","Fundamental Paper Novel":"746.png","Fused 240":"722.png","Gabriel's Awesome Schoolhouse (GASH)":"784.png","game inside a game inside a game inside a game inside a game inside a game":"729.png","Gang Beasts":"867.png","Generic Fighter Maybe":"519.png","Geometry Dash Lite (REMAKE)":"27.png","Get Yoked":"625.png","Getaway Shootout":"338.png","Getting Over It with Bennett Foddy":"557.png","Giant Wanted":"393.png","Gladihoppers":"4.png","Gobble":"37.png","Goblin Goopmaxxing":"655.png","God's Flesh":"434.png","Godzilla Daikaiju Battle Royale":"641.png","Going Balls":"662.png","Google Baseball":"257.png","Google Feud":"361.png","Gorilla Tag":"668.png","Grand Theft Auto 3":"851.png","Granny":"90.png","Granny 2":"125.png","Granny 3":"852.png","groon groon, babey!":"495.png","Growden.io":"603.png","Guess Their Answer":"155.png","Gun Clone":"394.png","Gun Runner":"395.png","Gunspin":"91.png","Half Life: Opposing Force":"693.png","Hammer 2: Reloaded":"844.png","Happy Sheepies":"351.png","Happy Wheels":"624.png","Harvest.io":"156.png","Helltaker":"790.png","Hide N Seek":"16.png","High Heels":"422.png","Highway Racer":"567.png","Highway Racer 2":"92.png","Highway Racer 2 REMASTERED":"568.png","Hill Climb Racing Lite":"157.png","Hobo 1":"673.png","Hobo 2":"674.png","Hobo 3":"675.png","Hobo 4":"676.png","Hobo 5":"677.png","Hobo 6":"678.png","Hobo 7":"679.png","Hotline Miami":"217.png","House of Hazards":"339.png","Hula Hoop Race":"569.png","Human Expenditure Program":"482.png","Hungry Lamu":"798.png","Hungry Lamu 2":"799.png","Hypper Sandbox":"551.png","I Have No Mouth, and I Must Scream":"779.png","I Wanna Be The Guy":"834.png","I woke up next to you again.":"491.png","Ice Dodo":"5.png","Idle Breakout":"362.png","Idle Dice":"294.png","Idle Lumber Inc":"363.png","Idle Mining Empire":"364.png","In Stars and Time":"667.png","Infinimoes":"442.png","Inscryption":"857.png","Into Space 2":"837.png","JavascriptPS1":"702.png","Jeffrey Epstein Basics In Education And Kidnapping":"751.png","Jelly Drift":"543.png","Jelly Mario":"315.png","Jelly Restaurant":"570.png","Jetpack Joyride":"7.png","Johnny Trigger":"93.png","JoJo's Bizarre Adventure: Heritage for the Future":"859.png","Journey Downhill":"94.png","Jumbo Mario":"712.png","JustFall.lol":"365.png","Kaji Run":"396.png","Kindergarten 2":"446.png","Kindergarten 3":"501.png","Kirby ~ Soft & Wet":"692.png","Kirby Squeak Squad":"684.png","Kirby Super Star Ultra":"680.png","Kitchen Bazar":"325.png","Kitty Toy":"441.png","La Madriguera (Lazy Bear Game)":"843.png","Lacey's Flash Games":"463.png","Layers Roll":"571.png","Lazy Jumper":"572.png","Learn to Fly":"340.png","Learn to Fly 2":"341.png","Learn to Fly 3":"342.png","Learn to Fly Idle":"343.png","Lethal Ape":"793.png","Lethal Company":"865.png","Line Rider":"95.png","Little Runmo":"302.png","Look Outside":"649.png","Love Letters":"538.png","Madalin Stunt Cars 2":"278.png","Madalin Stunt Cars 3":"279.png","Madness Combat: Project Nexus (classic)":"471.png","Magic Tiles 3":"17.png","Make a SuperBoat":"397.png","Makeover Run":"398.png","Man Runner 2048":"573.png","Match Triple 3D":"665.png","Maze Speedrun":"324.png","Meatboy":"689.png","Mega Car Jumps":"399.png","Melon Playground":"172.png","Merge Harvest":"366.png","Metal Gear Solid":"599.png","Midnight Shift":"658.png","Milk Inside a Bag of Milk Inside a Bag of Milk":"650.png","Milk Outside A Bag Of Milk Outside A Bag Of Milk":"651.png","Mindwave":"648.png","Minecraft 1.21.4":"183.png","Minecraft 1.5.2":"297.png","Minecraft 1.8.8":"181.png","Minecraft Alpha 1.2.6":"298.png","Minecraft Beta 1.3":"299.png","Minecraft Beta 1.7.3":"300.png","Minecraft Indev":"301.png","Minecraft Pocket Edition":"754.png","Minesweeper Mania":"313.png","Minesweeper Plus":"604.png","MiSide":"814.png","Mob Control HTML5":"22.png","Money Rush":"400.png","Monster Box 3D":"401.png","Monster Tracks":"36.png","Moto X3M":"96.png","Moto X3M 2":"97.png","Moto X3M 3":"98.png","Moto X3M Pool Party":"124.png","Moto X3M Spooky":"99.png","Moto X3M Winter":"100.png","Mountain Bike Racer":"774.png","Mutilate a Doll 2":"640.png","My Talking Baby Hippo":"840.png","myTeardrop":"540.png","n-gon":"180.png","Nazi Zombies: Portable":"308.png","Need For Speed: Carbon":"810.png","Need For Speed: Most Wanted":"811.png","Need For Speed: Underground 2":"812.png","Needy Streamer Overload":"708.png","Newgrounds Rumble":"587.png","Nijika's Ahoge":"447.png","Ninja vs EvilCorp":"101.png","Nubby's Number Factory":"517.png","Off":"629.png","Office Fight":"402.png","Offroad Mountain Bike":"116.png","Om Nom Run":"328.png","One Shot: World Machine edition":"846.png","Orange Roulette":"659.png","Oshi Oshi Punch!":"516.png","osu!":"130.png","Outhold":"777.png","Overburden":"760.png","OvO":"1.png","OvO 2":"2.png","OvO 3 Dimensions":"3.png","Pac Man World":"592.png","Pac Man World 2":"593.png","Pac-Man Superfast":"158.png","PacMan (Horror)":"515.png","Papa's Bakeria":"218.png","Papa's Burgeria":"219.png","Papa's Cheeseria":"220.png","Papa's Cupcakeria":"221.png","Papa's Donuteria":"222.png","Papa's Freezeria":"223.png","Papa's Hot Doggeria":"224.png","Papa's Pancakeria":"225.png","Papa's Pastaria":"226.png","Papa's Pizeria":"227.png","Papa's Scooperia":"228.png","Papa's Sushiria":"229.png","Papa's Taco Mia":"230.png","Papa's Wingeria":"231.png","Paper.io 2":"102.png","Papers, Please":"187.png","Papery Planes":"280.png","Parappa The Rapper":"524.png","Parking Fury 3D":"367.png","Parking Rush":"159.png","PEAK":"847.png","Peaks of Yore":"717.png","Peggle":"688.png","Phoenix Wright - Ace Attorney":"820.png","Phoenix Wright - Ace Attorney - Justice for All":"822.png","Phoenix Wright - Ace Attorney - Trials and Tribulations":"824.png","Pico's School (1999)":"687.png","PikuNiku":"856.png","Pixel Gun Survival":"281.png","Pizza Tower: Scoutdigo":"628.png","Plague Inc":"805.png","Plants vs Zombies":"232.png","Plants vs. Zombies 2 Gardenless":"597.png","Plants vs. Zombies GOTY Edition":"842.png","Please Dont Touch Anything":"660.png","Plinko":"544.png","Pokemon Emerald":"506.png","Pokemon Firered":"694.png","Pokemon HeartGold":"696.png","Pokemon Red":"505.png","Pokey Ball":"326.png","Poly Track":"123.png","PortaBoy+":"514.png","Postal":"617.png","Pottery Master":"574.png","Pou":"23.png","Power Hover":"743.png","Protektor":"282.png","Quake III Arena":"263.png","Race Master 3D":"160.png","Raft":"457.png","Raft Wars":"344.png","Raft Wars 2":"345.png","Ragdoll Archers":"186.png","Ragdoll Hit":"44.png","Rainbow Obby":"307.png","Raldi's Crackhouse":"670.png","Ravenfield":"854.png","RE:RUN":"260.png","Real Flight Simulator":"701.png","Recoil":"546.png","Red Ball":"239.png","Red Ball 2":"240.png","Red Ball 3":"241.png","Red Ball 4":"242.png","Red Ball 4 Vol. 2":"243.png","Red Ball 4 Vol. 3":"244.png","Resident Evil":"741.png","Resident Evil 2":"742.png","Retro Bowl":"33.png","Retro Bowl College":"34.png","Rhythm Heaven":"809.png","Rich Run 3D":"421.png","Riddle School":"287.png","Riddle School 2":"288.png","Riddle School 3":"289.png","Riddle School 4":"290.png","Riddle School 5":"291.png","Riddle Transfer":"292.png","Riddle Transfer 2":"293.png","RigBMX":"493.png","RigBMX 2":"494.png","Rio Rex":"643.png","Road of Fury":"42.png","Robot Invasion":"403.png","Rocket Goal.io":"800.png","Rogue Sergeant The Final Operation":"656.png","Rolling Sky":"553.png","Rolly Vortex":"208.png","Rooftop Snipers":"283.png","Rooftop Snipers 2":"490.png","Room Sort":"321.png","Roulette Hero":"720.png","Royal Towers: Medieval TD":"661.png","Ruffle":"113.png","Run 1":"175.png","Run 2":"176.png","Run 3":"177.png","s.p.l.i.t":"839.png","Saihate Station (さいはて駅)":"737.png","Sam & Max Hit the Road":"772.png","Sandboxels":"309.png","sandspiel":"317.png","sandstone":"469.png","Sandtris":"311.png","Scampton The Great":"802.png","Scary Shawarma Kiosk: the ANOMALY":"765.png","SCP: Containment Breach":"853.png","Scrap Metal 3":"188.png","Scratch Inc":"781.png","Seat Jam 3D":"404.png","Serial Experiments Lain":"778.png","Shapez.io":"595.png","Shift at Midnight":"721.png","Shipo.io":"306.png","Shooting Master":"405.png","Shovel 3D":"575.png","ShredSauce":"725.png","Side Effects":"318.png","Silent Hill":"713.png","Sky Riders":"576.png","Slender: The 8 Pages":"451.png","Slendytubbies 1":"796.png","Slendytubbies 2":"806.png","Slendytubbies 2D":"807.png","Slice it All":"128.png","Slime.io":"327.png","Slither.io":"461.png","Slope":"198.png","Slope 2":"368.png","Slowroads":"369.png","Smash Karts":"370.png","Snow Rider 3D":"119.png","Snowbattle.io":"207.png","Soccer Random":"739.png","Solar Smash":"118.png","Sonic CD":"589.png","Sonic Mania":"590.png","Sonic Robo Blast 2":"770.png","Sonic the Hedgehog 2: Community's Cut":"549.png","Sonic the Hedgehog 3: Angel Island Remastered":"550.png","Sonic.EXE":"598.png","Sonic.EXE (ORIGINAL)":"606.png","Sort the Court":"346.png","Space Funeral":"630.png","Space Waves":"117.png","Spacebar Clicker":"473.png","Spaceflight Simulator":"808.png","Speed Stars":"266.png","Spelunky Classic HD":"635.png","SpiderDoll":"347.png","Spiral Roll":"349.png","SpongeBob SquarePants: Krabby Katch":"533.png","SpongeBob SquarePants: Land Ho!":"526.png","SpongeBob SquarePants: Sandy's Sponge Stacker":"529.png","SpongeBob SquarePants: SpongeBob Run":"527.png","SpongeBob SquarePants: Squidward's Sizzlin' Scare":"528.png","SpongeBob SquarePants: Tasty Pastry Party":"530.png","SpongeBob SquarePants: The Kah-Ray-Tay Squid":"531.png","SpongeBob SquarePants: WereSquirrel":"532.png","Sprunki":"9.png","Stacky Dash":"18.png","Stardew Valley":"789.png","State.io":"161.png","Station 141":"452.png","Station Saturn":"453.png","Steal A Brainrot":"479.png","Steal Brainrot Online":"577.png","Stick Slasher":"767.png","Stick With It":"502.png","Stickman and Guns":"578.png","Stickman Boost":"372.png","Stickman Climb":"373.png","Stickman Destruction":"699.png","Stickman Duel":"769.png","Stickman Fight Ragdoll":"371.png","Stickman Golf":"374.png","Stickman Hook":"11.png","Stickman Kombat 2D":"768.png","Stone Grass Mowing Simulator":"584-a.png","Suika Game":"766.png","Super Mario 63":"314.png","Super Mario 64":"588.png","Super Mario Bros":"508.png","Super Mario Bros. Remastered":"736.png","Super Monkey Ball 1&2":"749.png","Super Smash Flash":"647.png","Super Star Car":"579.png","Superhot":"233.png","Supermarket 3D":"406.png","Supreme Duelist":"19.png","Survival Race":"122.png","Survive to Victory":"407.png","Survivor.io":"709.png","Sushi Roll":"322.png","Swordfight!!":"513.png","Swords and Sandals 2":"845.png","Swords and Souls":"178.png","t³ (T cubed)":"818.png","Tag":"627.png","Tall Man Run":"20.png","Tall.io":"664.png","Tanuki Sunset":"305.png","Team Fortress 2":"866.png","Teen Titans GO!: Jump Jousts":"534.png","Teen Titans GO!: Jump Jousts 2":"535.png","Telekinesis":"411.png","Telekinesis Attack":"408.png","Telekinesis Car":"409.png","Telekinesis Drive":"410.png","Temple Run 2":"10.png","Territorial.io":"303.png","Tetris":"733.png","The Deadseat":"458.png","The Impossible Quiz":"507.png","The Legend of Zelda Majora's Mask":"612.png","The Legend of Zelda Ocarina of Time":"611.png","The Man In The Window":"459.png","The Oregon Trail":"586.png","The World's Hardest Game":"103.png","The World's Hardest Game 3":"104.png","The World's Hardest Game 4":"105.png","They Are Coming":"348.png","Thing-Thing Arena 3":"780.png","This Is The Only Level":"106.png","This Is The Only Level 2":"107.png","Three Goblets":"620.png","TileTopia":"329.png","Time Shooter 1":"199.png","Time Shooter 2":"200.png","Time Shooter 3: SWAT":"201.png","Tiny Fishing":"108.png","Tomb Of The Mask":"109.png","Tomodachi Collection":"510.png","Toss The Turtle":"110.png","Touhou 1 Touhou-Reiiden":"829.png","Touhou 2 Touhou-Fuumaroku":"830.png","Touhou 3 Touhou-Yumejikuu":"831.png","Touhou 4 Touhou-Gensokyou":"832.png","Touhou 5 Touhou-Kaikidan":"833.png","Touhou Mother":"523.png","Touhou: Luminous Strike":"518.png","Tower Crash 3D":"162.png","Toy Rider":"614.png","Traffic Racer":"707.png","Traffic Rider":"580.png","Trees Hate You":"801.png","Trivia Crack":"163.png","Trombone Champion":"855.png","Tube Jumpers":"111.png","Tug of War with Cars":"413.png","Tunnel Rush":"206.png","Turbo Stars":"21.png","Twerk Race 3D":"414.png","Twisted Rope 3D":"415.png","Ultrapool":"757.png","Um Jammer Lammy":"782.png","Undertale Last Breath PHASE THREE":"748.png","Undertale Yellow":"456.png","Undertale: Last Breath":"731.png","UNDERWHEELS":"492.png","UvuvwevwevweOnyetenvewveUgwemubwemOssas":"795.png","Vampire Survivors":"804.png","Vena":"838.png","Vex 1":"45.png","Vex 2":"46.png","Vex 3":"47.png","Vex 3 XMAS":"48.png","Vex 4":"49.png","Vex 5":"50.png","Vex 6":"51.png","Vex 7":"52.png","Vex 8":"53.png","Vex Challenges":"54.png","Vex X3M":"55.png","Vex X3M 2":"56.png","Vib-Ribbon":"788.png","Volley Random":"786.png","VS Rewrite: ROUND 2":"703.png","Wall Crawler":"416.png","War Regions":"417.png","War The Knights":"284.png","WarioWare: Touched!":"841.png","Waterworks!":"594.png","We Become What We Behold":"671.png","Weapon Craft Run":"418.png","Weapon Scale":"420.png","Weapon Upgrade Rush":"419.png","Web Dashers":"785.png","Wheely":"245.png","Wheely 2":"246.png","Wheely 3":"247.png","Wheely 4":"248.png","Wheely 5":"249.png","Wheely 6":"250.png","Wheely 7":"251.png","Wheely 8":"252.png","Who's Your Daddy":"791.png","Witch's Heart":"756.png","Wordle":"112.png","World Box":"174.png","Worst Time Simulator":"747.png","Yandere Simulator":"554.png","YoHoHo.io":"835.png"};
+
+const STOP = /\b(unblocked|online|the|game|games|edition|version|ver|v\d+|free|html5|hd|remastered|redux)\b/g;
+let coverIndex = [];
+
+function simplify(name) {
+  return String(name).toLowerCase().replace(/\(.*?\)/g, " ").replace(/&/g, "and").replace(STOP, " ").replace(/[^a-z0-9]/g, "").replace(/fnaf/g, "fivenightsatfreddys");
+}
+function digitsOf(s) { return (s.match(/\d+/g) || []).join(","); }
+
+function initStaticCovers() {
+  const exact = new Map(), simple = new Map();
+  for (const [name, file] of Object.entries(STATIC_COVERS)) {
+    const url = STATIC_COVER_BASE + file, k = norm(name), sk = simplify(name);
+    if (!exact.has(k)) exact.set(k, url);
+    if (sk && !simple.has(sk)) simple.set(sk, url);
+  }
+  coverMap = exact; coverSimple = simple; coverIndex = [...simple.entries()];
+}
+
+async function loadCovers() {
+  const exact = new Map(coverMap); const simple = new Map(coverSimple);
+  // merge BOTH catalogs so a cover missing from one can come from the other
+  for (const src of COVER_SOURCES) {
+    try {
+      const data = await fetchJson(src.zones + "?haunthub=" + Date.now());
+      const list = Array.isArray(data) ? data : (data.zones || data.games || data.items || []);
+      list.forEach(item => {
+        const name = item && (item.name ?? item.title);
+        if (!name) return;
+        const cover = coverUrlFor(item, src);
+        if (!cover) return;
+        const k = norm(name), sk = simplify(name);
+        if (!exact.has(k)) exact.set(k, cover);
+        if (sk && !simple.has(sk)) simple.set(sk, cover);
+      });
+    } catch (e) { /* skip this source */ }
+  }
+  coverMap = exact;
+  coverIndex = [...simple.entries()];
+  coverSimple = simple;
+}
+let coverSimple = new Map();
+
+const SUFFIXES = /(good|cool|alt|debug|hack|hacked|modmenu|fixed|offline|encrypted|goof|real)$/;
+function stripSuffix(k) { let r = k; for (let i = 0; i < 2; i++) { const t = r.replace(SUFFIXES, ""); if (t.length >= 5) r = t; } return r; }
+
+function lev(a, b) {
+  const m = a.length, n = b.length; let prev = Array.from({ length: n + 1 }, (_, j) => j);
+  for (let i = 1; i <= m; i++) {
+    const cur = [i];
+    for (let j = 1; j <= n; j++) cur[j] = Math.min(prev[j] + 1, cur[j - 1] + 1, prev[j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1));
+    prev = cur;
+  }
+  return prev[n];
+}
+function fuzzyCover(key) {
+  if (key.length < 7) return "";
+  let best = "", bestScore = 0;
+  for (const [ck, url] of coverIndex) {
+    if (ck.length < 7 || Math.abs(ck.length - key.length) > 3) continue;
+    if (ck.slice(0, 3) !== key.slice(0, 3)) continue;
+    if (digitsOf(ck) !== digitsOf(key)) continue;
+    if (ck.replace(/[ivx]/g, "") === key.replace(/[ivx]/g, "")) continue;       // II vs VII style differences
+    const score = 1 - lev(ck, key) / Math.max(ck.length, key.length);
+    if (score >= 0.88 && score > bestScore) { best = url; bestScore = score; }
+  }
+  return best;
+}
+
+/* Families that share one cover: any game whose name starts with the prefix gets that catalog game's image. */
+const PREFIX_ALIASES = [
+  ["fridaynightfunkin","Friday Night Funkin"],["fnf","Friday Night Funkin"],
+  ["pokemonfirered","Pokemon Firered"],["pokefirered","Pokemon Firered"],["pokefrlg","Pokemon Firered"],
+  ["pokemonemerald","Pokemon Emerald"],["pokeemerald","Pokemon Emerald"],
+  ["pokemonheartgold","Pokemon HeartGold"],["pokeheartgold","Pokemon HeartGold"],
+  ["pokemonred","Pokemon Red"],["pokered","Pokemon Red"],
+  ["minecraft","Minecraft 1.8.8"],["eaglercraft","Minecraft 1.8.8"],
+  ["doom","DOOM"],["supermario63","Super Mario 63"],["sm64","Super Mario 64"],["mario64","Super Mario 64"],["supermariobros","Super Mario Bros"],
+  ["bloons","Bloons TD"],["cookieclicker","Cookie Clicker"],["granny","Granny"],["slope","Slope"],
+  ["geometrydash","Geometry Dash"],["geometryvibes","Geometry Dash"],["madness","Madness Combat: Project Nexus (classic)"],
+  ["plantsvszombies","Plants vs Zombies"],["pvz","Plants vs Zombies"],["sonicexe","Sonic.EXE"],["learntofly","Learn to Fly"],
+  ["fireboy","Fireboy and Watergirl 2"],["motox3m","Moto X3M"],["stickwar","Stick War: Legacy"],["tetris","Tetris"],
+  ["pacmanworld","Pac Man World"],["baldi","Baldi's Basics"],["sprunki","Sprunki"],["smashkarts","Smash Karts"],
+  ["supersmashflash","Super Smash Flash"],["pheonix","Phoenix Wright - Ace Attorney"],["fivenightsatfreddys","Five Nights at Freddy's"],
+  ["blockblast","Block Blast"],["fancypants","Fancy Pants Adventure"],["madalin","Madalin Stunt Cars 2"],["backrooms","Backrooms"],
+  ["snowrider","Snow Rider 3D"],["stickmanhook","Stickman Hook"],["happywheels","Happy Wheels"],["achievmentunlocked","Achievement Unlocked"]
+].sort((a, b) => b[0].length - a[0].length);
+
+function coverFor(game) {
+  const idStr = game.id.replace(/^cl/i, "");
+  const k = norm(game.name), idk = norm(idStr);
+  if (coverMap.has(k)) return coverMap.get(k);
+  if (coverMap.has(idk)) return coverMap.get(idk);
+  const keys = [...new Set([simplify(game.name), simplify(idStr)])].filter(Boolean);
+  const variants = [...new Set(keys.flatMap(x => [x, stripSuffix(x)]))];
+  for (const v of variants) if (coverSimple.has(v)) return coverSimple.get(v);
+  // careful containment match: nearly the same length and same numbers (so "Cookie Clicker 2" never gets "Cookie Clicker")
+  for (const key of variants) {
+    if (key.length < 6) continue;
+    let best = null, bestRatio = 0;
+    for (const [ck, url] of coverIndex) {
+      if (ck.length < 6) continue;
+      const [short, long] = key.length <= ck.length ? [key, ck] : [ck, key];
+      if (!long.includes(short)) continue;
+      const ratio = short.length / long.length;
+      if (ratio >= 0.85 && digitsOf(key) === digitsOf(ck) && ratio > bestRatio) { best = url; bestRatio = ratio; }
+    }
+    if (best) return best;
+  }
+  for (const v of variants) { const f = fuzzyCover(v); if (f) return f; }             // typos like "Achievmentunlocked"
+  for (const v of variants) {
+    for (const [prefix, name] of PREFIX_ALIASES) {
+      if (v.startsWith(prefix)) { const u = coverSimple.get(simplify(name)); if (u) return u; }
+    }
+  }
+  return "";
+}
+
+async function loadGames(showMessage = false) {
+  const btn = $("refreshBtn"); btn.disabled = true;
+  if (showMessage) setStatus("Refreshing the UGS game list…");
+  try {
+    const txt = await fetchText(LIST_URL + "?t=" + Date.now());
+    const m = txt.match(/let\s+files\s*=\s*(\[[\s\S]*?\]);/);
+    if (!m) throw new Error("game list not found");
+    const ids = JSON.parse(m[1]);
+    const seen = new Set(), out = [];
+    ids.forEach(id => {
+      if (!id || !/^cl/i.test(id)) return;          // skip non-game entries like esm / npm / skypack
+      const name = prettify(id);
+      const key = norm(name);
+      if (!key || seen.has(key)) return;
+      seen.add(key);
+      out.push({ id, name, url: gameUrl(id), cover: "", category: "UGS", origin: "catalog" });
+    });
+    ugsGames = out;
+    setStatus("Loaded " + out.length + " games from the UGS collection.", "good");
+    initStaticCovers();
+    ugsGames.forEach(g => g.cover = coverFor(g));
+    renderGames();
+    // covers load in the background and are applied when ready
+    loadCovers().then(() => { ugsGames.forEach(g => g.cover = coverFor(g)); renderGames(); });
+  } catch (e) {
+    ugsGames = []; renderGames();
+    setStatus("The UGS game list could not load (" + (e.message || "network error") + "). Press Refresh to try again.", "error");
+  }
+  btn.disabled = false;
+}
+
+function allGames() { return ugsGames; }
+const cmp = (a, b) => a.name.localeCompare(b.name, undefined, { numeric: true, sensitivity: "base" });
+const letterOf = n => { const c = (n.trim()[0] || "#").toUpperCase(); return /[A-Z]/.test(c) ? c : "#"; };
+
+/* ---- automatic cover search (Wikipedia) for games the catalogs don't have ---- */
+const WIKI_KEY = "haunthub_wiki_covers_v1";
+let wikiCache = {};
+try { wikiCache = JSON.parse(localStorage.getItem(WIKI_KEY) || "{}") || {}; } catch { wikiCache = {}; }
+function saveWiki() { try { localStorage.setItem(WIKI_KEY, JSON.stringify(wikiCache)); } catch {} }
+const wikiQueue = []; let wikiActive = 0;
+
+async function wikiFind(game) {
+  const gk = simplify(game.name);
+  if (!gk || gk.length < 4) return "";
+  const url = "https://en.wikipedia.org/w/api.php?action=query&format=json&origin=*&generator=search&gsrlimit=4" +
+    "&gsrsearch=" + encodeURIComponent(game.name + " video game") + "&prop=pageimages&piprop=thumbnail&pithumbsize=400";
+  const j = await fetchJson(url, 10000);
+  const pages = Object.values((j.query && j.query.pages) || {}).sort((a, b) => a.index - b.index);
+  for (const pg of pages) {
+    if (!pg.thumbnail || !pg.thumbnail.source) continue;
+    const tk = simplify(String(pg.title).replace(/\(.*?\)/g, ""));
+    if (!tk) continue;
+    if (digitsOf(tk) !== digitsOf(gk)) continue;
+    const [sh, lg] = tk.length <= gk.length ? [tk, gk] : [gk, tk];
+    if (tk === gk || (sh.length >= 5 && lg.includes(sh) && sh.length / lg.length >= 0.75)) return pg.thumbnail.source;
+  }
+  return "";
+}
+
+function setCoverImage(el, url) {
+  if (el.querySelector("img")) return;
+  const img = document.createElement("img");
+  img.src = url; img.alt = ""; img.loading = "lazy";
+  img.style.cssText = "position:absolute;inset:0";
+  img.onload = () => { el.style.position = "relative"; el.firstChild && el.firstChild.nodeType === 3 && (el.firstChild.textContent = ""); };
+  img.onerror = () => img.remove();
+  el.style.position = "relative";
+  el.appendChild(img);
+}
+
+function wikiPump() {
+  while (wikiActive < 3 && wikiQueue.length) {
+    const el = wikiQueue.shift(); const game = el._game;
+    wikiActive++;
+    (async () => {
+      let url = wikiCache[game.name];
+      if (url === undefined) {
+        try { url = await wikiFind(game); wikiCache[game.name] = url; saveWiki(); }
+        catch { url = ""; /* network hiccup: don't cache, will retry next visit */ }
+      }
+      if (url) setCoverImage(el, url);
+    })().finally(() => { wikiActive--; wikiPump(); });
+  }
+}
+const wikiObserver = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) { wikiObserver.unobserve(e.target); wikiQueue.push(e.target); wikiPump(); } });
+}, { rootMargin: "300px" });
+
+function watchCover(el, game) {
+  el._game = game;
+  const cached = wikiCache[game.name];
+  if (cached) setCoverImage(el, cached);
+  else if (cached === undefined) wikiObserver.observe(el);
+}
+
+function tileBg(name) { let h = 0; for (const c of name) h = (h * 31 + c.charCodeAt(0)) % 40; return "linear-gradient(135deg,hsl(" + (10 + h) + ",70%,32%),hsl(" + (h) + ",60%,14%))"; }
+function initialsOf(name) { const w = name.split(" ").filter(x => /[A-Za-z0-9]/.test(x)); return ((w[0] || "?")[0] + (w[1] ? w[1][0] : "")).toUpperCase(); }
+
+function makeCard(game) {
+  const card = document.createElement("article");
+  card.className = "game"; card.tabIndex = 0;
+  card.setAttribute("aria-label", "Play " + game.name);
+
+  const cover = document.createElement("div"); cover.className = "cover";
+  if (game.cover) {
+    const img = document.createElement("img");
+    img.src = game.cover; img.alt = game.name + " cover"; img.loading = "lazy";
+    img.onerror = () => { img.remove(); cover.textContent = initialsOf(game.name); cover.style.background = tileBg(game.name); cover.style.fontWeight = "800"; cover.style.fontSize = "38px"; watchCover(cover, game); };
+    cover.appendChild(img);
+  } else { cover.textContent = initialsOf(game.name); cover.style.background = tileBg(game.name); cover.style.fontWeight = "800"; cover.style.fontSize = "38px"; cover.style.textShadow = "0 2px 6px rgba(0,0,0,.5)"; watchCover(cover, game); }
+
+  const info = document.createElement("div"); info.className = "ginfo";
+  const title = document.createElement("div"); title.className = "gtitle"; title.textContent = game.name;
+  const play = document.createElement("button"); play.className = "playbtn"; play.textContent = "▶ Play";
+  play.addEventListener("click", e => { e.stopPropagation(); playGame(game); });
+  info.append(title, play);
+  card.append(cover, info);
+  card.addEventListener("click", () => playGame(game));
+  card.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); playGame(game); } });
+  return card;
+}
+
+function renderGames() {
+  const q = $("search").value.trim().toLowerCase();
+  const sort = $("sort").value;
+  let games = allGames().filter(g => g.name.toLowerCase().includes(q));
+  games.sort(cmp);
+  if (sort === "za") games.reverse();
+
+  $("count").textContent = games.length + (games.length === 1 ? " game" : " games");
+  const root = $("gameGrid"); root.replaceChildren();
+  const bar = $("azbar"); bar.replaceChildren();
+
+  if (!games.length) {
+    const e = document.createElement("div"); e.className = "empty";
+    e.textContent = ugsGames.length ? "No games match that search. Try another name." : "No games loaded yet. Press Refresh to try again.";
+    root.appendChild(e); return;
+  }
+
+  const letters = [...new Set(games.map(g => letterOf(g.name)))];
+  const all = ["#", ..."ABCDEFGHIJKLMNOPQRSTUVWXYZ"];
+  all.forEach(l => {
+    const b = document.createElement("button");
+    b.textContent = l;
+    if (letters.includes(l)) b.onclick = () => { const t = document.getElementById("sec-" + l); if (t) t.scrollIntoView({ behavior: "smooth" }); };
+    else b.className = "off";
+    bar.appendChild(b);
   });
-  section.append(grid);$('results').append(section);
- }
- $('status').textContent='Catalog ready. Real catalog covers are used when a matching title exists; other games show fallback artwork.';
+
+  const useHeads = sort === "az";
+  let grid = null, cur = null;
+  const frag = document.createDocumentFragment();
+  for (const g of games) {
+    const l = letterOf(g.name);
+    if (!grid || (useHeads && l !== cur)) {
+      cur = l;
+      if (useHeads) { const h = document.createElement("div"); h.className = "letter"; h.id = "sec-" + l; h.textContent = l; frag.appendChild(h); }
+      grid = document.createElement("div"); grid.className = "grid"; frag.appendChild(grid);
+    }
+    grid.appendChild(makeCard(g));
+  }
+  root.appendChild(frag);
 }
-function launch(g){
- const url='https://cdn.skypack.dev/ugs-singlefiles@1.0.5/UGS-Files/'+encodeURIComponent(g.id+'.html');
- // Open the original game directly in a new tab. Many game hosts explicitly block iframe embedding.
- const win=window.open(url,'_blank','noopener,noreferrer');
- if(!win){
-   $('status').textContent='Your browser blocked the new tab. Allow pop-ups for HauntHub, then click the game again.';
-   return;
- }
- $('status').textContent='Opening '+g.name+' in a new tab… If the game host blocks this URL, that particular game may be unavailable.';
+
+function showMissing() {
+  const cards = [...document.querySelectorAll("#gameGrid .game")];
+  const missing = cards.filter(c => !c.querySelector(".cover img")).map(c => c.querySelector(".gtitle").textContent);
+  $("missingInfo").textContent = missing.length + " of " + cards.length + " games on screen have no cover yet. Scroll the whole page first so the automatic search can finish, then press this button again. Copy this list and send it to Claude.";
+  $("missingText").value = missing.join("\n");
+  $("missingPanel").classList.add("show");
+  $("missingPanel").scrollIntoView({ behavior: "smooth", block: "center" });
 }
-$('search').addEventListener('input',render);$('sort').addEventListener('change',render);renderLetters();render();
-</script></body></html>
+
+function playGame(game) {
+  if (!game.url || !isHttpUrl(game.url)) { setStatus("This game does not have a valid playable URL.", "error"); return; }
+  // UGS files are served as plain text by the CDN, so fetch the file and write it into a blank tab to run it.
+  const w = window.open("about:blank", "_blank");
+  if (!w) { setStatus("Your browser blocked the new tab. Allow pop-ups for this site and try again.", "error"); return; }
+  w.document.write("<title>" + game.name.replace(/</g, "&lt;") + "</title><body style='background:#100c0b;color:#ffbd69;font-family:Arial;display:flex;align-items:center;justify-content:center;height:100vh;margin:0'>🎃 Loading " + game.name.replace(/</g, "&lt;") + "…</body>");
+  fetch(game.url + "?t=" + Date.now())
+    .then(r => { if (!r.ok) throw new Error("HTTP " + r.status); return r.text(); })
+    .then(text => { w.document.open(); w.document.write(text); w.document.close(); })
+    .catch(err => {
+      w.document.body.textContent = "Couldn't load this game (" + err.message + "). Close this tab and try again.";
+    });
+}
+
+$("search").addEventListener("input", renderGames);
+$("sort").addEventListener("change", renderGames);
+
+loadGames();
+</script>
+</body>
+</html>
