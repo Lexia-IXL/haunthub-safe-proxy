@@ -73,7 +73,7 @@ function render(){
    img.onerror=()=>{if(candidate<candidates.length)tryCandidate();else{img.onerror=null;img.src=fallbackCover(g.name,g.id)}};
    tryCandidate();c.append(img);
    const t=document.createElement('div');t.className='title';t.textContent=g.name;
-   const sub=document.createElement('div');sub.className='sub';sub.textContent='▶ Click to play';t.append(sub);
+   const sub=document.createElement('div');sub.className='sub';sub.textContent='↗ Open game in new tab';t.append(sub);
    card.append(c,t);card.onclick=()=>launch(g);card.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();launch(g)}};
    grid.append(card);
   });
@@ -83,9 +83,13 @@ function render(){
 }
 function launch(g){
  const url='https://cdn.skypack.dev/ugs-singlefiles@1.0.5/UGS-Files/'+encodeURIComponent(g.id+'.html');
- const win=window.open('about:blank','_blank');
- if(!win){$('status').textContent='Pop-up blocked. Allow pop-ups for HauntHub and click the game again.';return}
- win.document.open();win.document.write('<!doctype html><html><head><meta charset="utf-8"><title>'+g.name.replace(/[&<>]/g,'')+'</title><meta name="viewport" content="width=device-width,initial-scale=1"></head><body style="margin:0;background:#000"><iframe src="'+url.replace(/&/g,'&amp;').replace(/"/g,'&quot;')+'" style="border:0;width:100vw;height:100vh" allow="autoplay;fullscreen;gamepad" allowfullscreen></iframe></body></html>');win.document.close();
+ // Open the original game directly in a new tab. Many game hosts explicitly block iframe embedding.
+ const win=window.open(url,'_blank','noopener,noreferrer');
+ if(!win){
+   $('status').textContent='Your browser blocked the new tab. Allow pop-ups for HauntHub, then click the game again.';
+   return;
+ }
+ $('status').textContent='Opening '+g.name+' in a new tab… If the game host blocks this URL, that particular game may be unavailable.';
 }
 $('search').addEventListener('input',render);$('sort').addEventListener('change',render);renderLetters();render();
 </script></body></html>
